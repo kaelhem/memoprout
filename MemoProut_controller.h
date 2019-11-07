@@ -8,6 +8,11 @@
 #include "Arduino.h"
 #include "FourteenButtons.h"
 
+// multi-touch actions
+#define TOUCH_NONE 0
+#define TOUCH_1 1
+#define TOUCH_2 2
+
 struct LedButton {
   byte ledPin0;
   byte ledPin1;
@@ -18,6 +23,7 @@ class MemoProut_controller
 {
   public:
     byte currentPressedButton;
+    byte currentMultiTouchAction;
     byte LED_OK;
     byte LED_KO;
   

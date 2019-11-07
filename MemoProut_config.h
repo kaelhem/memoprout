@@ -6,6 +6,6 @@
 #define MemoProut_config_h
 
 #define DEFAULT_VOLUME 4
-#define DEBUG_MODE true
+#define DEBUG_MODE false
 
 #endif

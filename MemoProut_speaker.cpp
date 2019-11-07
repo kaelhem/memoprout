@@ -37,6 +37,9 @@ bool MemoProut_speaker::isReady()
 
 void MemoProut_speaker::playSound(String filename)
 {
+  if (DEBUG_MODE) {
+    Serial.println("Will play: " + filename); 
+  }
   if (SD.exists(filename)) {
     tmrpcm.play(filename.c_str());
   } else {

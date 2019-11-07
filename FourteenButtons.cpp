@@ -43,7 +43,7 @@ byte FourteenButtons::readValue()
   // read analog value each milliseconds, until there are 3 identical values.
   byte idxButton = 0;
   byte countIdenticals = 0;
-  while (countIdenticals < 3) {
+  while (countIdenticals < 5) {
     byte val = (analogRead(_pin) + (1024 / 28)) / (1024 / 14);
   	if (val == idxButton) {
   	  ++countIdenticals;

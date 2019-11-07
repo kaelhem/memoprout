@@ -188,9 +188,22 @@ void MemoProut_controller::resetLeds()
 
 void MemoProut_controller::listenButtons() {
   byte pressedButton = topButtons.readValue();
+  byte val;
   if (pressedButton == 255) {
-    byte val = bottomButtons.readValue();
+    val = bottomButtons.readValue();
     pressedButton = val == 255 ? 255 : val + 14;
+    currentMultiTouchAction = TOUCH_NONE;
+  } else if (pressedButton == BT_1) {
+    val = bottomButtons.readValue() + 14;
+    if (val == BT_22) {
+      currentMultiTouchAction = TOUCH_1;
+    } else if (val == BT_28) {
+      currentMultiTouchAction = TOUCH_2;
+    } else {
+      currentMultiTouchAction = TOUCH_NONE;
+    }
+  } else {
+    currentMultiTouchAction = TOUCH_NONE;
   }
   if (pressedButton != 255 && currentPressedButton != pressedButton) {
     currentPressedButton = pressedButton;
@@ -228,7 +241,7 @@ void MemoProut_controller::showMessage(String msg, int msgSpeed) {
   String ledsMessage = "000000";
   byte i;
   for (i = 0; i < msg.length(); ++i) {
-    ledsMessage += charToLeds(msg.charAt(i)) + "00";
+    ledsMessage += charToLeds(msg.charAt(i)) + "0";
   }
   bool isFinished = false;
   while (!isFinished) {
