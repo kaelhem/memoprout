@@ -1,9 +1,9 @@
-#include "FourteenButtons.h"
 #include "MemoProut_controller.h"
+#include "MemoProut_speaker.h"
 #include "MemoProut_pins.h"
-#include <SPI.h>
-#include <SD.h>
-#include <TMRpcm.h>
+#include "MemoProut_config.h"
+
+#define NO_PRESSED_BUTTON 255
 
 // MAIN STATES
 #define WAIT 255
@@ -17,35 +17,11 @@
 #define PLAY_SOUND 0
 #define WAIT_BUTTON 1
 
-//void showMessage(String msg, int msgSpeed = 200);
-
 byte mainState = STARTUP;
 String gameKind = "BASIC";
 
-TMRpcm tmrpcm;
-byte soundVolume = 4;
-bool canUpVolume = true;
-bool canDownVolume = true;
-
-void upVolume() {
-  if (soundVolume < 6) {
-    soundVolume += 1;
-  }
-  canUpVolume = soundVolume < 6;
-  canDownVolume = true;
-  tmrpcm.setVolume(soundVolume);
-}
-
-void downVolume() {
-  if (soundVolume > 2) {
-    soundVolume -= 1;
-  }
-  canUpVolume = true;
-  canDownVolume = soundVolume > 2;
-  tmrpcm.setVolume(soundVolume);
-}
-
-MemoProut_controller memoProutController = MemoProut_controller();
+MemoProut_speaker speaker = MemoProut_speaker();
+MemoProut_controller controller = MemoProut_controller();
 
 uint8_t currentStatus = 0;
 uint8_t currentSoundStatus;
@@ -61,71 +37,53 @@ char* sndId[] = {
 byte checkLedIndex = 0;
 
 void checkLeds() {
-  Serial.println("checkLeds");
-  memoProutController.listenButtons();
-  if (memoProutController.currentPressedButton != 255) {
+  if (DEBUG_MODE) {
+    Serial.println("CHECK LEDS");
+  }
+  controller.listenButtons();
+  if (controller.currentPressedButton != NO_PRESSED_BUTTON) {
     checkLedIndex = 0;
-    Serial.println("back to menu");
     gotoState(MENU);
   } else {
-    memoProutController.lightUp(checkLedIndex);
+    controller.lightUp(controller.getButtonIdAtIndex(checkLedIndex));
     delay(200);
     if (++checkLedIndex == 28) {
       checkLedIndex = 0;
-      memoProutController.lightUp(memoProutController.LED_OK);
+      controller.lightUp(controller.LED_OK);
       delay(200);
-      memoProutController.lightUp(memoProutController.LED_KO);
+      controller.lightUp(controller.LED_KO);
       delay(200);
     }
   }
 }
 
-bool sdCardFailed = false;
-
 void setup() {
-  Serial.begin(9600); // début de la communication série
-  tmrpcm.speakerPin = SPEAKER_PIN; // Speaker sur la pin 9
-  tmrpcm.setVolume(soundVolume); // gestion du volume de 0 à 7
-  tmrpcm.quality(1); // qualitée audio 0 ou 1
-  tmrpcm.disable();
-
+  Serial.begin(9600);
   randomSeed(analogRead(0));
-
-  memoProutController.init();
-
-  // Initialisation de la carte SD
-  if (!SD.begin(SD_PIN)) {
-    sdCardFailed = true;
-  }
+  speaker.init();
+  controller.init();
 }
 
-void playSound(String filename)
-{
-  if (SD.exists(filename)) {
-    tmrpcm.play(filename.c_str());
-  } else {
-    tmrpcm.play("PROUTS/P1.WAV");
+void startup() {
+  if (DEBUG_MODE) {
+    Serial.println("STARTUP");
   }
-}
-
-void startup() {  
-  memoProutController.resetLeds();
+  controller.resetLeds();
   mainState = MENU;
 }
 
 void gotoState(byte state) {
   mainState = WAIT;
-  Serial.println("WAIT");
-  while (memoProutController.currentPressedButton != 255) {
-    memoProutController.listenButtons();
+  while (controller.currentPressedButton != NO_PRESSED_BUTTON) {
+    controller.listenButtons();
   }
   mainState = state;
 }
 
 void menu()
 {
-  memoProutController.listenButtons();
-  switch (memoProutController.currentPressedButton) {
+  controller.listenButtons();
+  switch (controller.currentPressedButton) {
     case 0: 
       // basic game
       gameKind = "BASIC";
@@ -148,27 +106,26 @@ void menu()
     break;
     case 12:
       // vol +
-      if (canUpVolume && !tmrpcm.isPlaying()) {
-        upVolume();
-        tmrpcm.play("BASIC/INTER1.WAV");
+      if (speaker.canUpVolume && !speaker.isPlaying()) {
+        speaker.upVolume();
+        speaker.playSound("BASIC/INTER1.WAV");
       }
     break;
     case 13:
       // vol -
-      if (canDownVolume && !tmrpcm.isPlaying()) {
-        downVolume();
-        tmrpcm.play("BASIC/INTER1.WAV");
+      if (speaker.canDownVolume && !speaker.isPlaying()) {
+        speaker.downVolume();
+        speaker.playSound("BASIC/INTER1.WAV");
       }
     break;
     case 26:
       // check leds
-      Serial.println("CHECK_LEDS");
       gotoState(CHECK_LEDS);
     break;
     default:
       byte ledsToEnlight[] = { 0, 1, 15, 14, 26 };
       const byte numLeds = sizeof(ledsToEnlight) / sizeof(byte);
-      memoProutController.multiLightUp(ledsToEnlight, numLeds);
+      controller.multiLightUp(ledsToEnlight, numLeds);
     break;
   }
 }
@@ -176,15 +133,14 @@ void menu()
 void loop() {
   switch(mainState) {
     case STARTUP:
-      Serial.println("Startup");
-      if (sdCardFailed) {
-        memoProutController.blinkLed(memoProutController.LED_KO, 3, 100);
-        memoProutController.showMessage("NO SD");
+      if (!speaker.isReady()) {
+        controller.blinkLed(controller.LED_KO, 3, 100);
+        controller.showMessage("NO SD");
       } else {
-        memoProutController.blinkLed(memoProutController.LED_OK, 1, 100);
-        tmrpcm.play("PROUTS/P1.WAV");
-        memoProutController.showMessage("PROUT", 50);
-        tmrpcm.disable();
+        controller.blinkLed(controller.LED_OK, 1, 100);
+        speaker.playSound("PROUTS/P1.WAV");
+        controller.showMessage("PROUT", 50);
+        speaker.stopSound();
         startup();
       }
     break;
@@ -192,18 +148,16 @@ void loop() {
       menu();
     break;
     case GAME_LOOP:
-      if (!tmrpcm.isPlaying()) {
-        String filename = getNextFilename();
-        playSound(filename);
+      if (!speaker.isPlaying()) {
+        speaker.playSound(getNextFilename());
         byte ledIndex = (7 * currentSoundStatus + currentSoundIndex - 1);
-        memoProutController.lightUp(ledIndex);
+        controller.lightUp(ledIndex);
       }
     break;
     case GAME_OVER:
-      memoProutController.resetLeds();
-      if (!tmrpcm.isPlaying()) {
-        String filename = gameKind + "/LOOSE.WAV";
-        playSound(filename.c_str());
+      controller.resetLeds();
+      if (!speaker.isPlaying()) {
+        speaker.playSound(gameKind + "/LOOSE.WAV");
       }
     break;
     case CHECK_LEDS:

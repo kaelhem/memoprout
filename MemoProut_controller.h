@@ -8,6 +8,12 @@
 #include "Arduino.h"
 #include "FourteenButtons.h"
 
+struct LedButton {
+  byte ledPin0;
+  byte ledPin1;
+  byte buttonId;
+};
+
 class MemoProut_controller
 {
   public:
@@ -23,10 +29,12 @@ class MemoProut_controller
     void blinkLed(byte ledIndex, byte numBlink, uint8_t duration);
     void resetLeds();
     void showMessage(String msg, int msgSpeed = 200);
+    byte getButtonIdAt(byte row, byte col);
+    byte getButtonIdAtIndex(byte index);
   private:
     FourteenButtons topButtons;
     FourteenButtons bottomButtons;
-    byte leds[4][7][3];
+    LedButton leds[4][7];
     byte buttonsMap[30][2];
     
     String charToLeds(char c);

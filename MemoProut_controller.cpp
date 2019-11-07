@@ -7,21 +7,55 @@
 #include "MemoProut_controller.h"
 #include "MemoProut_pins.h"
 
+/*
+REFERENCE MAP :
+  { {LED_4, LED_6,  BT_1}, {LED_5, LED_4,  BT_2}, {LED_4, LED_5,  BT_3}, {LED_6, LED_3,  BT_4}, {LED_3, LED_6,  BT_5}, {LED_5, LED_3,  BT_6}, {LED_3, LED_5,  BT_7} },
+  { {LED_6, LED_4,  BT_8}, {LED_4, LED_3,  BT_9}, {LED_3, LED_4, BT_10}, {LED_6, LED_2, BT_11}, {LED_2, LED_6, BT_12}, {LED_5, LED_2, BT_13}, {LED_2, LED_5, BT_14} },
+  { {LED_2, LED_4, BT_15}, {LED_3, LED_2, BT_16}, {LED_2, LED_3, BT_17}, {LED_6, LED_1, BT_18}, {LED_1, LED_6, BT_19}, {LED_5, LED_1, BT_20}, {LED_1, LED_5, BT_21} },
+  { {LED_4, LED_2, BT_22}, {LED_4, LED_1, BT_23}, {LED_1, LED_4, BT_24}, {LED_3, LED_1, BT_25}, {LED_1, LED_3, BT_26}, {LED_2, LED_1, BT_27}, {LED_1, LED_2, BT_28} } 
+*/
+
 MemoProut_controller::MemoProut_controller()
 {
-  byte ledMatrix[4][7][3] = {
-    { {LED_4, LED_6,  0}, {LED_5, LED_4,  2}, {LED_4, LED_5,  4}, {LED_6, LED_3,  6}, {LED_3, LED_6,  8}, {LED_5, LED_3, 10}, {LED_3, LED_5, 12} },
-    { {LED_6, LED_4,  1}, {LED_4, LED_3,  3}, {LED_3, LED_4,  5}, {LED_6, LED_2,  7}, {LED_2, LED_6,  9}, {LED_5, LED_2, 11}, {LED_2, LED_5, 13} },
-    { {LED_2, LED_4, 15}, {LED_3, LED_2, 17}, {LED_2, LED_3, 19}, {LED_6, LED_1, 21}, {LED_1, LED_6, 23}, {LED_5, LED_1, 25}, {LED_1, LED_5, 27} },
-    { {LED_4, LED_2, 14}, {LED_4, LED_1, 16}, {LED_1, LED_4, 18}, {LED_3, LED_1, 20}, {LED_1, LED_3, 22}, {LED_2, LED_1, 24}, {LED_1, LED_2, 26} }
-  };
+  // row 1
+  leds[0][0] = {LED_4, LED_6,  BT_1};
+  leds[0][1] = {LED_5, LED_4,  BT_2};
+  leds[0][2] = {LED_4, LED_5,  BT_3};
+  leds[0][3] = {LED_6, LED_3,  BT_4};
+  leds[0][4] = {LED_3, LED_6,  BT_5};
+  leds[0][5] = {LED_5, LED_3,  BT_6};
+  leds[0][6] = {LED_3, LED_5,  BT_7};
+  // row 2
+  leds[1][0] = {LED_6, LED_4,  BT_8};
+  leds[1][1] = {LED_4, LED_3,  BT_9};
+  leds[1][2] = {LED_3, LED_4, BT_10};
+  leds[1][3] = {LED_6, LED_2, BT_11};
+  leds[1][4] = {LED_2, LED_6, BT_12};
+  leds[1][5] = {LED_5, LED_2, BT_13};
+  leds[1][6] = {LED_2, LED_5, BT_14};
+  // row 3
+  leds[2][0] = {LED_2, LED_4, BT_15};
+  leds[2][1] = {LED_3, LED_2, BT_16};
+  leds[2][2] = {LED_2, LED_3, BT_17};
+  leds[2][3] = {LED_6, LED_1, BT_18};
+  leds[2][4] = {LED_1, LED_6, BT_19};
+  leds[2][5] = {LED_5, LED_1, BT_20};
+  leds[2][6] = {LED_1, LED_5, BT_21};
+  // row 4
+  leds[3][0] = {LED_4, LED_2, BT_22};
+  leds[3][1] = {LED_4, LED_1, BT_23};
+  leds[3][2] = {LED_1, LED_4, BT_24};
+  leds[3][3] = {LED_3, LED_1, BT_25};
+  leds[3][4] = {LED_1, LED_3, BT_26};
+  leds[3][5] = {LED_2, LED_1, BT_27};
+  leds[3][6] = {LED_1, LED_2, BT_28};
   
   // init buttonsMap()
   for (byte i = 0; i < 4; ++ i) {
     for (byte j = 0; j < 7; ++ j) {
-      byte btId = ledMatrix[i][j][2];
-      memcpy(buttonsMap[btId], ledMatrix[i][j], 2);
-      memcpy(leds[i][j], ledMatrix[i][j], 3);
+      byte btId = leds[i][j].buttonId;
+      buttonsMap[btId][0] = leds[i][j].ledPin0;
+      buttonsMap[btId][1] = leds[i][j].ledPin1;
     }
   }
 
@@ -38,9 +72,14 @@ MemoProut_controller::MemoProut_controller()
   bottomButtons = FourteenButtons();
 }
 
-void MemoProut_controller::getLedIndex(row, col)
+byte MemoProut_controller::getButtonIdAt(byte row, byte col)
 {
-  byte idx = (i * 7 + j);
+  return leds[row][col].buttonId;
+}
+
+byte MemoProut_controller::getButtonIdAtIndex(byte index)
+{
+  return getButtonIdAt(floor(index / 7), index % 7);
 }
 
 void MemoProut_controller::init()
@@ -71,7 +110,7 @@ void MemoProut_controller::lightUpColumn(byte pattern, byte column)
 {  
   for (byte i = 0; i < 4; ++i) {
     if (bitRead(pattern, i) == 1) {
-      lightUp(leds[i][column][2]);
+      lightUp(leds[i][column].buttonId);
       delay(1);
     }
   }
