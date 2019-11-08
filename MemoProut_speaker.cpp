@@ -9,6 +9,7 @@
 #include "MemoProut_config.h"
 #include <SPI.h>
 #include <SD.h>
+#include <avr/pgmspace.h>
 
 MemoProut_speaker::MemoProut_speaker()
 {

@@ -6,6 +6,7 @@
 #include "Arduino.h"
 #include "MemoProut_controller.h"
 #include "MemoProut_pins.h"
+#include <avr/pgmspace.h>
 
 /*
 REFERENCE MAP :
@@ -136,34 +137,34 @@ void MemoProut_controller::blinkLed(byte ledIndex, byte numBlink, uint8_t durati
 String MemoProut_controller::charToLeds(char c) {
   String result;
   switch(c) {
-    case 'A': result = "F5F"; break;
-    case 'B': result = "FC"; break;
-    case 'C': result = "F99"; break;
-    case 'D': result = "F96"; break;
-    case 'E': result = "FBB"; break;
-    case 'F': result = "F51"; break;
-    case 'G': result = "FDD"; break;
-    case 'H': result = "F6F"; break;
-    case 'I': result = "F"; break;
-    case 'J': result = "9F1"; break;
-    case 'K': result = "F2D"; break;
-    case 'L': result = "F8"; break;
-    case 'M': result = "F242F"; break;
-    case 'N': result = "F24F"; break;
-    case 'O': result = "F9F"; break;
-    case 'P': result = "F33"; break;
-    case 'Q': result = "F978"; break;
-    case 'R': result = "F7B"; break;
-    case 'S': result = "BD"; break;
-    case 'T': result = "1F1"; break;
-    case 'U': result = "F8F"; break;
-    case 'V': result = "787"; break;
-    case 'W': result = "78687"; break;
-    case 'X': result = "9669"; break;
-    case 'Y': result = "3C3"; break;
-    case 'Z': result = "9DB9"; break;
+    case 'A': result = F("F5F"); break;
+    case 'B': result = F("FC"); break;
+    case 'C': result = F("F99"); break;
+    case 'D': result = F("F96"); break;
+    case 'E': result = F("FBB"); break;
+    case 'F': result = F("F51"); break;
+    case 'G': result = F("FDD"); break;
+    case 'H': result = F("F6F"); break;
+    case 'I': result = F("F"); break;
+    case 'J': result = F("9F1"); break;
+    case 'K': result = F("F2D"); break;
+    case 'L': result = F("F8"); break;
+    case 'M': result = F("F242F"); break;
+    case 'N': result = F("F24F"); break;
+    case 'O': result = F("F9F"); break;
+    case 'P': result = F("F33"); break;
+    case 'Q': result = F("F978"); break;
+    case 'R': result = F("F7B"); break;
+    case 'S': result = F("BD"); break;
+    case 'T': result = F("1F1"); break;
+    case 'U': result = F("F8F"); break;
+    case 'V': result = F("787"); break;
+    case 'W': result = F("78687"); break;
+    case 'X': result = F("9669"); break;
+    case 'Y': result = F("3C3"); break;
+    case 'Z': result = F("9DB9"); break;
     default:
-      result = "0";
+      result = '0';
   }
   return result;
 }
@@ -238,10 +239,10 @@ byte MemoProut_controller::numLedsFromScheme(byte ledScheme[7])
 }
 
 void MemoProut_controller::showMessage(String msg, int msgSpeed) {
-  String ledsMessage = "000000";
+  String ledsMessage = F("000000");
   byte i;
   for (i = 0; i < msg.length(); ++i) {
-    ledsMessage += charToLeds(msg.charAt(i)) + "0";
+    ledsMessage += charToLeds(msg.charAt(i)) + '0';
   }
   bool isFinished = false;
   while (!isFinished) {

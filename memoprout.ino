@@ -25,8 +25,9 @@
 const char *BASIC = "BASIC";
 const char *KIDS = "KIDS";
 const char *CINEMA = "CINEMA";
+const char *gameBufferFile = "GAME.PRT";
+const char *scoreBufferFile = "CFG.PRT";
 
-char *gameBufferFile = "GAME.PRT";
 byte mainState = STARTUP;
 byte gameState = PLAY_SOUND;
 char *gameKind = BASIC;
@@ -98,10 +99,15 @@ void menu() {
       gameKind = CINEMA;
       gotoState(GAME_LOOP);
     break;
-    case 2:
+    case 27:
       if (!speaker.isPlaying()) {
-        speaker.playSoundAndWait(F("UI/HISCORE.WAV"));
-        speaker.playSoundAndWait(F("SCORE/S9.WAV"));
+        File scoreFile = SD.open(scoreBufferFile, FILE_READ);
+        byte scoreSoundIndex = max(0, min(scoreFile.read(), 10));
+        scoreFile.close();
+        if (scoreSoundIndex > 0) {
+          speaker.playSoundAndWait(F("UI/HISCORE.WAV"));
+        }
+        speaker.playSoundAndWait("SCORE/S" + String(scoreSoundIndex) + ".WAV");
       }
     break;
     case 12:
@@ -122,12 +128,10 @@ void menu() {
       // check leds
       gotoState(CHECK_LEDS);
     break;
-    default:
-      byte ledsToEnlight[] = { 0, 1, 15, 26 };
-      const byte numLeds = sizeof(ledsToEnlight) / sizeof(byte);
-      controller.multiLightUp(ledsToEnlight, numLeds);
-    break;
   }
+  byte ledsToEnlight[] = { 0, 1, 15, 26, 27 };
+  const byte numLeds = sizeof(ledsToEnlight) / sizeof(byte);
+  controller.multiLightUp(ledsToEnlight, numLeds);
 }
 
 byte waitButtonRelease = NO_PRESSED_BUTTON;
@@ -187,6 +191,25 @@ GameSound getGameSoundAt(byte index) {
     Serial.println("read " + String(index) + ": " + String(gameSound.kind) + ", " + String(gameSound.variant) + ", " + String(gameSound.buttonId));
   }
   return gameSound;
+}
+
+byte readHiScore() {
+  if (SD.exists(scoreBufferFile)) {
+    File scoreFile = SD.open(scoreBufferFile, FILE_READ);
+    byte readScore = scoreFile.read();
+    scoreFile.close();
+    return readScore;
+  }
+  return 0;
+}
+
+void writeHiScore(byte newScore) {
+  if (SD.exists(scoreBufferFile)) {
+    SD.remove(scoreBufferFile);
+  }
+  File scoreFile = SD.open(scoreBufferFile, FILE_WRITE);
+  scoreFile.write(newScore);
+  scoreFile.close();
 }
 
 void gameLoop() {
@@ -288,11 +311,21 @@ void loop() {
       gameLoop();
     break;
     case GAME_OVER:
-      controller.blinkLed(controller.LED_KO, 3, 100);
-      if (!speaker.isPlaying()) {
-        speaker.playSound(String(gameKind) + F("/LOOSE.WAV"));
-        controller.showMessage(F("YOU LOOSE"), 160);
+      byte hiScore = readHiScore();
+      if (score > hiScore) {
+        writeHiScore(hiScore);
       }
+      controller.blinkLed(controller.LED_KO, 3, 100);
+      speaker.playSoundAndWait(F("UI/LOOSE.WAV"));
+      if (score > 0) {
+        speaker.playSoundAndWait(F("UI/URSCORE.WAV"));
+        byte scoreSoundIndex = max(0, min(score, 10));
+        speaker.playSoundAndWait("SCORE/S" + String(scoreSoundIndex) + ".WAV");
+      }
+      if (score < 3) {
+        speaker.playSound(String(gameKind) + F("/LOOSE.WAV"));
+      }
+      controller.showMessage(F("YOU LOOSE"), 160);
       while (speaker.isPlaying()) {
         delay(1);
       }
