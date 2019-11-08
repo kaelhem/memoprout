@@ -16,6 +16,7 @@ class MemoProut_speaker
     MemoProut_speaker();
     void init();
     void playSound(String filename);
+    void playSoundAndWait(String filename);
     void stopSound();
     void upVolume();
     void downVolume();

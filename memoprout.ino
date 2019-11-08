@@ -24,53 +24,50 @@
 char *gameBufferFile = "GAME.PRT";
 byte mainState = STARTUP;
 byte gameState = PLAY_SOUND;
-String gameKind = "BASIC";
+char *gameKind = "BASIC";
 
 MemoProut_speaker speaker = MemoProut_speaker();
 MemoProut_controller controller = MemoProut_controller();
 
-byte checkLedIndex = 0;
-
 void checkLeds() {
-  if (DEBUG_MODE) {
-    Serial.println("CHECK LEDS");
-  }
-  controller.listenButtons();
-  if (controller.currentPressedButton != NO_PRESSED_BUTTON) {
-    checkLedIndex = 0;
-    gotoState(MENU);
-  } else {
-    controller.lightUp(controller.getButtonIdAtIndex(checkLedIndex));
-    delay(200);
-    if (++checkLedIndex == 28) {
+  byte checkLedIndex = 0;
+  while (mainState == CHECK_LEDS) {
+    controller.listenButtons();
+    if (controller.currentPressedButton != NO_PRESSED_BUTTON) {
       checkLedIndex = 0;
-      controller.lightUp(controller.LED_OK);
+      gotoState(MENU);
+    } else {
+      controller.lightUp(controller.getButtonIdAtIndex(checkLedIndex));
       delay(200);
-      controller.lightUp(controller.LED_KO);
-      delay(200);
-    }
+      if (++checkLedIndex == 28) {
+        checkLedIndex = 0;
+        controller.lightUp(controller.LED_OK);
+        delay(200);
+        controller.lightUp(controller.LED_KO);
+        delay(200);
+      }
+    } 
   }
 }
 
 void setup() {
   Serial.begin(9600);
-  //randomSeed(analogRead(0));
   speaker.init();
   controller.init();
 }
 
 void startup() {
-  if (DEBUG_MODE) {
-    Serial.println("STARTUP");
-  }
   controller.resetLeds();
-  mainState = MENU;
+  gotoState(MENU);
 }
 
 void gotoState(byte state) {
   mainState = WAIT;
   while (controller.currentPressedButton != NO_PRESSED_BUTTON) {
     controller.listenButtons();
+  }
+  if (state == MENU) {
+    speaker.playSound("UI/MENU.WAV");
   }
   mainState = state;
 }
@@ -91,29 +88,29 @@ void menu() {
       gotoState(GAME_LOOP);
     break;
     case 15:
-      // music game
-      gameState = PREPARE_GAME;
-      gameKind = "MUSIC";
-      gotoState(GAME_LOOP);
-    break;
-    case 14:
       // movie game
       gameState = PREPARE_GAME;
       gameKind = "CINEMA";
       gotoState(GAME_LOOP);
     break;
+    case 2:
+      if (!speaker.isPlaying()) {
+        speaker.playSoundAndWait("UI/HISCORE.WAV");
+        speaker.playSoundAndWait("SCORE/S9.WAV");
+      }
+    break;
     case 12:
       // vol +
       if (speaker.canUpVolume && !speaker.isPlaying()) {
         speaker.upVolume();
-        speaker.playSound("BASIC/INTER1.WAV");
+        speaker.playSound("PROUTS/P10.WAV");
       }
     break;
     case 13:
       // vol -
       if (speaker.canDownVolume && !speaker.isPlaying()) {
         speaker.downVolume();
-        speaker.playSound("BASIC/INTER1.WAV");
+        speaker.playSound("PROUTS/P10.WAV");
       }
     break;
     case 26:
@@ -121,7 +118,7 @@ void menu() {
       gotoState(CHECK_LEDS);
     break;
     default:
-      byte ledsToEnlight[] = { 0, 1, 15, 14, 26 };
+      byte ledsToEnlight[] = { 0, 1, 15, 26 };
       const byte numLeds = sizeof(ledsToEnlight) / sizeof(byte);
       controller.multiLightUp(ledsToEnlight, numLeds);
     break;
@@ -133,8 +130,6 @@ byte firstWaitButton;
 byte currentWaitButton;
 byte currentWaitButtonIndex;
 byte score;
-byte currentSoundStatus;
-byte currentSoundIndex;
 
 void prepareNewGame() {
   controller.resetLeds();
@@ -151,7 +146,9 @@ void prepareNewGame() {
     randomButton = TrueRandom.random(0, 28);
     if (gameKind == "BASIC") {
       soundVariant = TrueRandom.random(1, kind == 3 ? 5 : 9);
-    } else {
+    } else if (gameKind == "CINEMA") {
+      soundVariant = TrueRandom.random(1, 15);
+    } else  {
       soundVariant = TrueRandom.random(1, 5);
     }
     if (DEBUG_MODE) {
@@ -195,14 +192,11 @@ void gameLoop() {
     case PLAY_SOUND:
       if (!speaker.isPlaying()) {
         GameSound gameSound = getGameSoundAt(score);
-        speaker.playSound(getFilename(gameSound.kind, gameSound.variant));
         controller.lightUp(gameSound.buttonId);
         currentWaitButtonIndex = 0;
         currentWaitButton = firstWaitButton;
         waitButtonRelease = NO_PRESSED_BUTTON;
-        while(speaker.isPlaying()) {
-          delay(1);
-        }
+        speaker.playSoundAndWait(getFilename(gameSound.kind, gameSound.variant));
         controller.resetLeds();
         gameState = WAIT_BUTTON;
       }
@@ -210,12 +204,11 @@ void gameLoop() {
     case REPLAY_ALL:
       for (byte i = 0; i <= score; ++i) {
         GameSound gameSound = getGameSoundAt(i);
-        speaker.playSound(getFilename(gameSound.kind, gameSound.variant));
         controller.lightUp(gameSound.buttonId);
-        while(speaker.isPlaying()) {
-          delay(1);
-        }
+        speaker.playSoundAndWait(getFilename(gameSound.kind, gameSound.variant));
         controller.resetLeds();
+        currentWaitButtonIndex = 0;
+        currentWaitButton = firstWaitButton;
         waitButtonRelease = NO_PRESSED_BUTTON;
         gameState = WAIT_BUTTON;
       }
@@ -228,7 +221,7 @@ void gameLoop() {
           while (controller.currentPressedButton != NO_PRESSED_BUTTON) {
             controller.listenButtons();
           }
-          mainState = MENU;
+          gotoState(MENU);
         } else if (controller.currentMultiTouchAction == TOUCH_2) {
           // multi touch action 2
           while (controller.currentPressedButton != NO_PRESSED_BUTTON) {
@@ -244,12 +237,14 @@ void gameLoop() {
           for (byte lightTimer = 0; lightTimer < 100; ++lightTimer) {
             controller.multiLightUp(ledsToEnlight, 2); 
           }
+          /*
           controller.lightUp(currentWaitButton);
           GameSound currentGameSound = getGameSoundAt(currentWaitButtonIndex);
           speaker.playSound(getFilename(currentGameSound.kind, currentGameSound.variant));
           while(speaker.isPlaying()) {
             delay(1);
           }
+          */
           controller.resetLeds();
           if (++currentWaitButtonIndex <= score) {
             GameSound gameSound = getGameSoundAt(currentWaitButtonIndex);
@@ -290,7 +285,7 @@ void loop() {
     case GAME_OVER:
       controller.blinkLed(controller.LED_KO, 3, 100);
       if (!speaker.isPlaying()) {
-        speaker.playSound(gameKind + "/LOOSE.WAV");
+        speaker.playSound(String(gameKind) + "/LOOSE.WAV");
         controller.showMessage("YOU LOOSE", 160);
       }
       while (speaker.isPlaying()) {
@@ -304,15 +299,15 @@ void loop() {
   }
 }
 
-char *sndId[] = {
-  "SUBJECT",
-  "VERB",
-  "COMP",
-  "INTER"
-};
-
 String getFilename(byte soundKindIndex, byte soundVariantIndex) {
-  String filename = gameKind + "/" + String(sndId[soundKindIndex]);
-  filename += String(soundVariantIndex) + ".WAV";
-  return filename;
+  if (gameKind == "CINEMA") {
+    return "CINEMA/MOVIE" + String(soundVariantIndex) + ".WAV";
+  }
+  char *sndId[] = {
+    "SUBJECT",
+    "VERB",
+    "COMP",
+    "INTER"
+  };
+  return String(gameKind) + "/" + String(sndId[soundKindIndex]) + String(soundVariantIndex) + ".WAV";
 }
