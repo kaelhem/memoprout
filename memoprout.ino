@@ -4,6 +4,7 @@
 #include "MemoProut_pins.h"
 #include "MemoProut_config.h"
 #include <TrueRandom.h>
+#include <avr/pgmspace.h>
 
 #define NO_PRESSED_BUTTON 255
 
@@ -21,10 +22,14 @@
 #define WAIT_BUTTON 2
 #define REPLAY_ALL 3
 
+const char *BASIC = "BASIC";
+const char *KIDS = "KIDS";
+const char *CINEMA = "CINEMA";
+
 char *gameBufferFile = "GAME.PRT";
 byte mainState = STARTUP;
 byte gameState = PLAY_SOUND;
-char *gameKind = "BASIC";
+char *gameKind = BASIC;
 
 MemoProut_speaker speaker = MemoProut_speaker();
 MemoProut_controller controller = MemoProut_controller();
@@ -67,7 +72,7 @@ void gotoState(byte state) {
     controller.listenButtons();
   }
   if (state == MENU) {
-    speaker.playSound("UI/MENU.WAV");
+    speaker.playSound(F("UI/MENU.WAV"));
   }
   mainState = state;
 }
@@ -78,39 +83,39 @@ void menu() {
     case 0: 
       // basic game
       gameState = PREPARE_GAME;
-      gameKind = "BASIC";
+      gameKind = BASIC;
       gotoState(GAME_LOOP);
     break;
     case 1:
       // kids game
       gameState = PREPARE_GAME;
-      gameKind = "KIDS";
+      gameKind = KIDS;
       gotoState(GAME_LOOP);
     break;
     case 15:
       // movie game
       gameState = PREPARE_GAME;
-      gameKind = "CINEMA";
+      gameKind = CINEMA;
       gotoState(GAME_LOOP);
     break;
     case 2:
       if (!speaker.isPlaying()) {
-        speaker.playSoundAndWait("UI/HISCORE.WAV");
-        speaker.playSoundAndWait("SCORE/S9.WAV");
+        speaker.playSoundAndWait(F("UI/HISCORE.WAV"));
+        speaker.playSoundAndWait(F("SCORE/S9.WAV"));
       }
     break;
     case 12:
       // vol +
       if (speaker.canUpVolume && !speaker.isPlaying()) {
         speaker.upVolume();
-        speaker.playSound("PROUTS/P10.WAV");
+        speaker.playSound(F("PROUTS/P10.WAV"));
       }
     break;
     case 13:
       // vol -
       if (speaker.canDownVolume && !speaker.isPlaying()) {
         speaker.downVolume();
-        speaker.playSound("PROUTS/P10.WAV");
+        speaker.playSound(F("PROUTS/P10.WAV"));
       }
     break;
     case 26:
@@ -144,9 +149,9 @@ void prepareNewGame() {
   byte soundVariant;
   for (byte i = 0; i < 30; ++i) {
     randomButton = TrueRandom.random(0, 28);
-    if (gameKind == "BASIC") {
+    if (gameKind == BASIC) {
       soundVariant = TrueRandom.random(1, kind == 3 ? 5 : 9);
-    } else if (gameKind == "CINEMA") {
+    } else if (gameKind == CINEMA) {
       soundVariant = TrueRandom.random(1, 15);
     } else  {
       soundVariant = TrueRandom.random(1, 5);
@@ -161,7 +166,7 @@ void prepareNewGame() {
       firstWaitButton = randomButton;
     }
     ++kind;
-    if ((kind == 4 && gameKind == "BASIC") || (kind == 3 && gameKind != "BASIC")) {
+    if ((kind == 4 && gameKind == BASIC) || (kind == 3 && gameKind != BASIC)) {
       kind = 0;
     }
   }
@@ -267,11 +272,11 @@ void loop() {
     case STARTUP:
       if (!speaker.isReady()) {
         controller.blinkLed(controller.LED_KO, 3, 100);
-        controller.showMessage("NO SD", 150);
+        controller.showMessage(F("NO SD"), 150);
       } else {
         controller.blinkLed(controller.LED_OK, 1, 100);
-        speaker.playSound("PROUTS/P1.WAV");
-        controller.showMessage("PROUT", 120);
+        speaker.playSound(F("PROUTS/P1.WAV"));
+        controller.showMessage(F("PROUT"), 120);
         speaker.stopSound();
         startup();
       }
@@ -285,8 +290,8 @@ void loop() {
     case GAME_OVER:
       controller.blinkLed(controller.LED_KO, 3, 100);
       if (!speaker.isPlaying()) {
-        speaker.playSound(String(gameKind) + "/LOOSE.WAV");
-        controller.showMessage("YOU LOOSE", 160);
+        speaker.playSound(String(gameKind) + F("/LOOSE.WAV"));
+        controller.showMessage(F("YOU LOOSE"), 160);
       }
       while (speaker.isPlaying()) {
         delay(1);
@@ -300,8 +305,8 @@ void loop() {
 }
 
 String getFilename(byte soundKindIndex, byte soundVariantIndex) {
-  if (gameKind == "CINEMA") {
-    return "CINEMA/MOVIE" + String(soundVariantIndex) + ".WAV";
+  if (gameKind == CINEMA) {
+    return String(gameKind) + "/MOVIE" + String(soundVariantIndex) + F(".WAV");
   }
   char *sndId[] = {
     "SUBJECT",
@@ -309,5 +314,5 @@ String getFilename(byte soundKindIndex, byte soundVariantIndex) {
     "COMP",
     "INTER"
   };
-  return String(gameKind) + "/" + String(sndId[soundKindIndex]) + String(soundVariantIndex) + ".WAV";
+  return String(gameKind) + "/" + String(sndId[soundKindIndex]) + String(soundVariantIndex) + F(".WAV");
 }
