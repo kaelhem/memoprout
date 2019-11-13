@@ -1,0 +1,12 @@
+{
+  "name": "randomize-games",
+  "version": "1.0.0",
+  "description": "helper to generatexs random memoprout games",
+  "main": "index.js",
+  "author": "klem",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "shuffle-array": "^1.0.1"
+  }
+}
