@@ -81,6 +81,27 @@ void MemoProut_speaker::downVolume()
   tmrpcm.setVolume(soundVolume);
 }
 
+byte MemoProut_speaker::getVolume()
+{
+  return soundVolume;
+}
+
+void MemoProut_speaker::setVolume(byte vol)
+{
+  canUpVolume = true;
+  canDownVolume = true;
+  if (vol >= 6) {
+    soundVolume = 6;
+    canUpVolume = false;
+  } else if (vol <= 2) {
+    soundVolume = 2;
+    canDownVolume = false;
+  } else {
+    soundVolume = vol;
+  }
+  tmrpcm.setVolume(soundVolume);
+}
+
 bool MemoProut_speaker::isPlaying()
 {
   return tmrpcm.isPlaying();

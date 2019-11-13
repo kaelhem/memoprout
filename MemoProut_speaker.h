@@ -22,6 +22,8 @@ class MemoProut_speaker
     void downVolume();
     bool isPlaying();
     bool isReady();
+    byte getVolume();
+    void setVolume(byte vol);
   private:
     byte soundVolume;
     bool isSdReady;

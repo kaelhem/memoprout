@@ -5,7 +5,7 @@
 #ifndef MemoProut_config_h
 #define MemoProut_config_h
 
-#define DEFAULT_VOLUME 5
+#define DEFAULT_VOLUME 4
 #define DEBUG_MODE false
 
 #endif

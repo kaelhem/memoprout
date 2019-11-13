@@ -69,20 +69,24 @@ void loadConfig() {
   if (SD.exists(configBufferFile)) {
     File configFile = SD.open(configBufferFile, FILE_READ);
     globalGameIndex = configFile.read();
+    speaker.setVolume(configFile.read());
     configFile.close();
   }
-  // TO REMOVE !!
-  globalGameIndex = 129;
 }
 
-void updateGlobalGameIndex() {
-  ++globalGameIndex;
+void saveConfig() {
   if (SD.exists(configBufferFile)) {
     SD.remove(configBufferFile);
   }
   File configFile = SD.open(configBufferFile, FILE_WRITE);
   configFile.write(globalGameIndex);
+  configFile.write(speaker.getVolume());
   configFile.close();
+}
+
+void updateGlobalGameIndex() {
+  ++globalGameIndex;
+  saveConfig();
 }
 
 void startup() {
@@ -126,40 +130,47 @@ void switchGameKind() {
   speaker.playSoundAndWait("UI/" + String(gameKind) + F(".WAV"));
 }
 
+void upVolume() {
+  if (speaker.canUpVolume && !speaker.isPlaying()) {
+    speaker.upVolume();
+    saveConfig();
+    speaker.playSound(F("PROUTS/P10.WAV"));    
+  }
+}
+
+void downVolume() {
+  if (speaker.canDownVolume && !speaker.isPlaying()) {
+    speaker.downVolume();
+    saveConfig();
+    speaker.playSound(F("PROUTS/P10.WAV"));
+  }
+}
+
+void showHiScore() {
+  if (!speaker.isPlaying()) {
+    byte scoreSoundIndex = max(0, min(readHiScore(), 10));
+    if (scoreSoundIndex > 0) {
+      speaker.playSoundAndWait(F("UI/HISCORE.WAV"));
+    }
+    speaker.playSoundAndWait("SCORE/S" + String(scoreSoundIndex) + F(".WAV"));
+  } 
+}
+
 void menu() {
   controller.listenButtons();
   switch (controller.currentPressedButton) {
-    case BT_1: 
-      // basic game
-      switchGameKind();
-    break;
-    case BT_22:
-      if (!speaker.isPlaying()) {
-        byte scoreSoundIndex = max(0, min(readHiScore(), 10));
-        if (scoreSoundIndex > 0) {
-          speaker.playSoundAndWait(F("UI/HISCORE.WAV"));
-        }
-        speaker.playSoundAndWait("SCORE/S" + String(scoreSoundIndex) + F(".WAV"));
-      }
-    break;
-    case BT_7:
-      // vol +
-      if (speaker.canUpVolume && !speaker.isPlaying()) {
-        speaker.upVolume();
-        speaker.playSound(F("PROUTS/P10.WAV"));
-      }
-    break;
-    case BT_14:
-      // vol -
-      if (speaker.canDownVolume && !speaker.isPlaying()) {
-        speaker.downVolume();
-        speaker.playSound(F("PROUTS/P10.WAV"));
-      }
-    break;
+    case BT_1: switchGameKind(); break;
+    case BT_22: showHiScore(); break;
+    case BT_7: upVolume(); break;
+    case BT_14: downVolume(); break;
     case BT_28:
-      //gotoState(CHECK_LEDS);
       gameState = PREPARE_GAME;
       gotoState(GAME_LOOP);
+    break;
+
+    // hidden features :
+    case BT_11:
+      gotoState(CHECK_LEDS);
     break;
   }
   byte ledsToEnlight[] = { BT_1, BT_22, BT_7, BT_14, BT_28 };
