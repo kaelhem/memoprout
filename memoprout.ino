@@ -24,6 +24,7 @@
 const char *BASIC = "BASIC";
 const char *KIDS = "KIDS";
 const char *CINEMA = "CINEMA";
+const char *MUSIC = "MUSIC";
 const char *gameBufferFile = "GAME.PRT";
 const char *scoreBufferFile = "SCORE.PRT";
 const char *configBufferFile = "CFG.PRT";
@@ -124,6 +125,8 @@ void switchGameKind() {
     gameKind = KIDS;
   } else if (gameKind == KIDS) {
     gameKind = CINEMA;
+  } else if (gameKind == CINEMA) {
+    gameKind = MUSIC;
   } else {
     gameKind = BASIC;
   }
@@ -355,8 +358,8 @@ void loop() {
 }
 
 String getFilename(byte soundKindIndex, byte soundVariantIndex) {
-  if (gameKind == CINEMA) {
-    return String(gameKind) + "/MOVIE" + String(soundVariantIndex) + F(".WAV");
+  if (gameKind == CINEMA || gameKind == MUSIC) {
+    return String(gameKind) + "/M" + String(soundVariantIndex) + F(".WAV");
   }
   char *sndId[] = {
     "SUBJECT",

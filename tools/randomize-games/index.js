@@ -60,10 +60,10 @@ if (fs.existsSync('generated')) {
 fs.mkdirSync('generated')
 
 for (let i = 0; i < 255; ++i) {
-  const game = generateBasicGame()
-  fs.appendFileSync('generated/BASIC.PRT', Buffer.from(game))
+  fs.appendFileSync('generated/BASIC.PRT', Buffer.from(generateBasicGame()))
   fs.appendFileSync('generated/KIDS.PRT', Buffer.from(generateBasicGame()))
   fs.appendFileSync('generated/CINEMA.PRT', Buffer.from(generateSimpleGame()))
+  fs.appendFileSync('generated/MUSIC.PRT', Buffer.from(generateSimpleGame()))
 }
 
 console.log('done.')
