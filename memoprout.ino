@@ -101,7 +101,7 @@ void startup() {
     speaker.stopSound();
     controller.resetLeds();
     mainState = MENU;
-    speaker.playSound(F("UI/BASIC.WAV"));
+    speaker.playSoundAndWait(F("UI/BASIC.WAV"));
   }
 }
 
@@ -114,7 +114,7 @@ void gotoState(byte state) {
     controller.listenButtons();
   }
   if (state == MENU) {
-    speaker.playSound(F("UI/MENU.WAV"));
+    speaker.playSoundAndWait(F("UI/MENU.WAV"));
   }
   mainState = state;
 }
@@ -134,7 +134,7 @@ void upVolume() {
   if (speaker.canUpVolume && !speaker.isPlaying()) {
     speaker.upVolume();
     saveConfig();
-    speaker.playSound(F("PROUTS/P10.WAV"));    
+    speaker.playSoundAndWait(F("PROUTS/P10.WAV"));    
   }
 }
 
@@ -142,7 +142,7 @@ void downVolume() {
   if (speaker.canDownVolume && !speaker.isPlaying()) {
     speaker.downVolume();
     saveConfig();
-    speaker.playSound(F("PROUTS/P10.WAV"));
+    speaker.playSoundAndWait(F("PROUTS/P10.WAV"));
   }
 }
 
@@ -280,18 +280,18 @@ void gameLoop() {
     case WAIT_BUTTON:
       controller.listenButtons();
       if (controller.currentPressedButton != NO_PRESSED_BUTTON) {
-        if (controller.currentMultiTouchAction == TOUCH_1) {
-          // multi touch action 1
+        if (controller.currentMultiTouchAction != TOUCH_NONE) {
+          byte action = controller.currentMultiTouchAction;
           while (controller.currentPressedButton != NO_PRESSED_BUTTON) {
             controller.listenButtons();
           }
-          gotoState(MENU);
-        } else if (controller.currentMultiTouchAction == TOUCH_2) {
-          // multi touch action 2
-          while (controller.currentPressedButton != NO_PRESSED_BUTTON) {
-            controller.listenButtons();
+          waitButtonRelease = NO_PRESSED_BUTTON;
+          switch (action) {
+            case TOUCH_1: gotoState(MENU); break;
+            case TOUCH_2: gameState = REPLAY_ALL; break;
+            case TOUCH_3: upVolume(); break;
+            case TOUCH_4: downVolume(); break;
           }
-          gameState = REPLAY_ALL;
         } else {
           waitButtonRelease = controller.currentPressedButton;
         }

@@ -12,6 +12,8 @@
 #define TOUCH_NONE 0
 #define TOUCH_1 1
 #define TOUCH_2 2
+#define TOUCH_3 3
+#define TOUCH_4 4
 
 struct LedButton {
   byte ledPin0;

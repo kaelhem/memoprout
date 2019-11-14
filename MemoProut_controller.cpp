@@ -194,17 +194,19 @@ void MemoProut_controller::listenButtons() {
     val = bottomButtons.readValue();
     pressedButton = val == 255 ? 255 : val + 14;
     currentMultiTouchAction = TOUCH_NONE;
-  } else if (pressedButton == BT_1) {
+  } else {
     val = bottomButtons.readValue() + 14;
-    if (val == BT_22) {
-      currentMultiTouchAction = TOUCH_1;
-    } else if (val == BT_28) {
+    if (pressedButton == BT_1 && val == BT_22) {
+        currentMultiTouchAction = TOUCH_1;
+    } else if (pressedButton == BT_1 && val == BT_28) {
       currentMultiTouchAction = TOUCH_2;
+    } else if (pressedButton == BT_7 && val == BT_28) {
+      currentMultiTouchAction = TOUCH_3;
+    } else if (pressedButton == BT_14 && val == BT_28) {
+      currentMultiTouchAction = TOUCH_4;
     } else {
       currentMultiTouchAction = TOUCH_NONE;
-    }
-  } else {
-    currentMultiTouchAction = TOUCH_NONE;
+    }  
   }
   if (pressedButton != 255 && currentPressedButton != pressedButton) {
     currentPressedButton = pressedButton;
@@ -215,7 +217,7 @@ void MemoProut_controller::listenButtons() {
   }
 }
 
-// --- ---
+// --- Display messages with leds ---
 
 byte MemoProut_controller::charToHex(char c) {
   if (c >= '0' && c <= '9')
