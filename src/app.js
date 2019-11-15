@@ -5,14 +5,13 @@ import './app.css'
 function App() {
   return (
     <div className="app">
-      <header className="block">
+      <div className="block">
         <img src={logo} className="app-logo" alt="logo" />
-        <h2>Ceci est une révolution.</h2>
-      </header>
+        <h2>Ceci est une mémolution.</h2>
+      </div>
       <div className="inverted-block">
         <h2>Un design unique aux courbes élégantes.</h2>
-        <img src="assets/pics/mmpp-front.png" alt="Memoprout Pad© - face avant" />
-        <img src="assets/pics/mmpp-side.png" alt="Memoprout Pad© - côté droit" />
+        <img className="picture" src="assets/pics/mmpp-front-side.png" alt="Memoprout Pad© - prototype" />
       </div>
       <div className="block">
         <h2>Votre compagnon de toilette idéal !</h2>
