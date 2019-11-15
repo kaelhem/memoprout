@@ -300,6 +300,7 @@ void gameLoop() {
         }
       } else if (waitButtonRelease != NO_PRESSED_BUTTON) {
         if (waitButtonRelease == currentWaitSound->buttonId) {
+          waitButtonRelease = NO_PRESSED_BUTTON;
           byte ledsToEnlight[] = { controller.LED_OK, currentWaitSound->buttonId };
           for (byte lightTimer = 0; lightTimer < 100; ++lightTimer) {
             controller.multiLightUp(ledsToEnlight, 2); 
@@ -307,7 +308,15 @@ void gameLoop() {
           controller.lightUp(currentWaitSound->buttonId);
           speaker.playSound(getFilename(currentWaitSound->kind, currentWaitSound->variant));
           while(speaker.isPlaying()) {
-            delay(1);
+            if (currentWaitButtonIndex <= score) {
+              controller.listenButtons();
+              if (controller.currentPressedButton != NO_PRESSED_BUTTON) {
+                speaker.stopSound();
+                waitButtonRelease = controller.currentPressedButton;
+              }
+            } else {
+              delay(1);
+            }
           }
           controller.resetLeds();
           if (++currentWaitButtonIndex <= score) {
@@ -319,7 +328,6 @@ void gameLoop() {
         } else {
           gotoState(GAME_OVER);
         }
-        waitButtonRelease = NO_PRESSED_BUTTON;
       }
     break;
   }  
