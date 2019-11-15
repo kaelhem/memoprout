@@ -60,6 +60,17 @@
   font-size: calc(15px + 2vmin);
 }
 
+.block a, .inverted-block a {
+  text-decoration: none;
+  color: #0ca8f5;
+}
+
+.block a:hover, .inverted-block a:hover {
+  border-bottom-width: 1px;
+  border-bottom-style: dashed;
+  border-bottom-color: #0ca8f5;
+}
+
 .block {
   background-color: #fff;
   color: #111;
