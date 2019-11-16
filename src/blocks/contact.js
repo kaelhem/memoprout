@@ -25,6 +25,8 @@ const Contact = () => {
     .catch(error => setStatus('error'))
   };
 
+  const allFieldsAreFilled = () => name && email && message
+
   const renderForm = () => (
     <form name="contact" onSubmit={handleSubmit}>
       <input type="hidden" name="form-name" value="contact" />
@@ -38,7 +40,7 @@ const Contact = () => {
         <label><span>Message :</span><textarea value={message} onChange={ e => setMessage(e.target.value) }></textarea></label>
       </p>
       <p style={{ textAlign: 'right', marginRight: 1 }}>
-        <button type="submit">Envoyer</button>
+        <button disabled={ !allFieldsAreFilled() } type="submit">Envoyer</button>
       </p>
     </form>
   )

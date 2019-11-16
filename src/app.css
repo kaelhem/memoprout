@@ -132,6 +132,12 @@ button:hover {
   color: #fff;
 }
 
+button:disabled, button:disabled:hover {
+  background: #fff;
+  color: graytext;
+  cursor: default;
+}
+
 
 /* spinner */
 .lds-grid {
