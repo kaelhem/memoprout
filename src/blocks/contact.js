@@ -10,7 +10,7 @@ const Contact = () => {
 
   const [status, setStatus] = useState('form')
   const [name, setName] = useState('')
-  const [mail, setMail] = useState('')
+  const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
 
   const handleSubmit = e => {
@@ -19,7 +19,7 @@ const Contact = () => {
     fetch('/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: encode({ 'form-name': 'contact', name, mail, message })
+      body: encode({ 'form-name': 'contact', name, email, message })
     })
     .then(() => setStatus('sent'))
     .catch(error => setStatus('error'))
@@ -32,7 +32,7 @@ const Contact = () => {
         <label><span>Nom :</span><input type="text" value={name} onChange={ e => setName(e.target.value) }/></label>
       </p>
       <p>
-        <label><span>Email :</span><input type="email" value={mail} onChange={ e => setMail(e.target.value) }/></label>
+        <label><span>Email :</span><input type="email" value={email} onChange={ e => setEmail(e.target.value) }/></label>
       </p>
       <p>
         <label><span>Message :</span><textarea value={message} onChange={ e => setMessage(e.target.value) }></textarea></label>
