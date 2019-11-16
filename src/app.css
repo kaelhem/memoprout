@@ -88,3 +88,46 @@ h2 {
 .picture {
   width: 80vw;
 }
+
+form p {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+form label span {
+  width: 120px;
+  display: inline-block;
+  font-size: 0.7em;
+  vertical-align: baseline;
+  padding-right: 10px;
+}
+
+form input, form textarea {
+  vertical-align: top;
+  width: 400px;
+  max-width: 80vw;
+  font-size: 0.7em;
+  height: 2em;
+  padding: 1px 1px 1px 6px;
+  font-family: 'Raleway', sans-serif;
+}
+
+form textarea {
+  height: 150px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+form button {
+  background: #fff;
+  border: 2px #fff solid;
+  box-shadow: none;
+  padding: 0.7em;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+form button:hover {
+  background: #111;
+  color: #fff;
+}

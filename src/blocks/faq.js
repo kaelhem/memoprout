@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 
 const FAQ = () => (
-  <div>
+  <Fragment>
     <h2>FAQ</h2>
     <p>todo</p>
-  </div>
+  </Fragment>
 )
 
 export default FAQ

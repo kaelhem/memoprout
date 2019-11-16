@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 
 const Footer = () => (
-  <div>
+  <Fragment>
     kaelhem © 2019
-  </div>
+  </Fragment>
 )
 
 export default Footer
