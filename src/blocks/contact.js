@@ -1,4 +1,5 @@
 import React, { useState, Fragment } from 'react'
+import Spinner from 'components/spinner'
 
 const encode = (data) => (
   Object.keys(data)
@@ -45,20 +46,6 @@ const Contact = () => {
     </form>
   )
 
-  const renderPending = () => (
-    <div className="lds-grid">
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-    </div>
-  )
-
   const renderSent = () => (
     <div style={{fontSize: '1.2em'}}>
       <div>Merci !</div>
@@ -78,7 +65,7 @@ const Contact = () => {
       <h2>Contactez-nous</h2>
       <p>Si vous avez une question, une remarque ou autre, vous pouvez nous le dire, on prendra le temps de vous répondre.</p>
       { status === 'form' && renderForm() }
-      { status === 'pending' && renderPending() }
+      { status === 'pending' && <Spinner /> }
       { status === 'sent' && renderSent() }
       { status === 'error' && renderError() }
     </Fragment>
