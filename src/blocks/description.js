@@ -13,7 +13,7 @@ const Description = () => (
       <li>messages défilant sur les 28 boutons rétro-éclairés</li>
       <li>interface audio flatulente</li>
       <li>autonomie démentielle</li>
-      <li>hardware et software en <i>open-source</i></li>
+      <li>hardware et software en <i>open source</i></li>
     </ul>
   </Fragment>
 )
