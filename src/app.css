@@ -12,30 +12,24 @@
   width: 30vw;
 }
 
-.page-header > * {
+.page-header div * {
   padding-top: 8px;
-  padding-bottom: 8px;
+  padding-bottom: 7px;
   padding-left: 15px;
   padding-right: 15px;
 }
 
-.page-header > a {
+.page-header div a {
   text-decoration: none;
   color: #111;
 }
 
-.page-header > a:not(:first-child) {
+.page-header div a {
   border-bottom: 3px #fff solid;
 }
 
-.page-header > a:hover:not(:first-child) {
+.page-header div a:hover {
   border-bottom: 3px #111 solid;
-}
-
-@media (max-width: 599px) {
-  .page-header {
-    display: none;
-  }
 }
 
 .blocks-container {
@@ -172,4 +166,14 @@ button:disabled, button:disabled:hover {
 
 .features-list li {
   margin-bottom: 1em;
+}
+
+.bg-burger-button {
+  background: #fff;
+  border-radius: 22px;
+  width: 44px;
+  height: 44px;
+  display: block;
+  position: fixed;
+  margin: 10px;
 }
