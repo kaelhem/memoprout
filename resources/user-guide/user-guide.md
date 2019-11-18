@@ -1,6 +1,6 @@
 
 
-# MemoProut Pad© - Guide l'utilisateur
+# MemoProut Pad© - Guide de l'utilisateur
 
 Version 1.0 - mis à jour le 18 novembre 2019
 
