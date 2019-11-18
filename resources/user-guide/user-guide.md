@@ -1,5 +1,3 @@
-
-
 # MemoProut Pad© - Guide de l'utilisateur
 
 Version 1.0 - mis à jour le 18 novembre 2019
@@ -8,11 +6,7 @@ Version 1.0 - mis à jour le 18 novembre 2019
 
 
 
-
-
-![](https://raw.githubusercontent.com/kaelhem/memoprout/master/resources/logo.png)
-
-
+![](https://raw.githubusercontent.com/kaelhem/memoprout/master/resources/user-guide/logo.png)
 
 
 
@@ -20,7 +14,7 @@ Version 1.0 - mis à jour le 18 novembre 2019
 
 
 
-[vue schematique]
+![](https://raw.githubusercontent.com/kaelhem/memoprout/master/resources/user-guide/schema.png)
 
 1. haut-parleur
 2. bouton marche/arrêt
@@ -51,7 +45,9 @@ Après avoir mis le **bouton marche/arrêt sur _ON_**, MemoProut Pad© affiche l
 
 ## Les contrôles
 
-[vue schematique]
+![](https://raw.githubusercontent.com/kaelhem/memoprout/master/resources/user-guide/schema-buttons.png)
+
+
 
 ### Menu
 
@@ -71,12 +67,16 @@ Il existe une commande cachée permettant de lancer un programme de vérificatio
 
 Un appui long sur n'importe quel bouton permet de revenir au menu.
 
+
+
 ### Pendant une partie
 
 + ⌘ + ▶) rejouer toute la séquence
 + ⌘ + ★) quitter la partie et retourner au menu
 + ▶ + vol+) augmenter le volume
 + ▶ + vol-) diminuer le volume
+
+
 
 
 
