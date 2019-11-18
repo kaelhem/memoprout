@@ -1,4 +1,4 @@
-![](https://raw.githubusercontent.com/kaelhem/memoprout/master/resources/logo.svg)
+![](https://raw.githubusercontent.com/kaelhem/memoprout/master/resources/logo.svg?sanitize=true)
 
 
 **This project is a work in progress !**
