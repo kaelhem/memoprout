@@ -82,7 +82,6 @@ Un appui long sur n'importe quel bouton permet de revenir au menu.
 
 
 
-​	
 
 ## Le jeu
 
