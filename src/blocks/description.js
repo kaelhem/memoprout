@@ -1,12 +1,10 @@
 import React, { Fragment } from 'react'
-import logoPad from './logo-pad.svg'
 
 const Description = () => (
   <Fragment>
-    <img src={logoPad} alt="logo-pad" />
     <h2>MemoProut Pad est LE jeu audio adapté aux pas trop petits et aux plus grands.</h2>
     <div>
-      <img className="small-picture" src="assets/pics/mmpp-toilet.jpg" alt="Memoprout Pad - toilet" />
+      <img className="small-picture" src="assets/pics/mmpp-toilet.jpg" alt="Memoprout Pad - toilet. Photo by Filios Sazeides on Unsplash" />
       <div className="picture-caption">Votre compagnon de toilettes idéal !</div>
     </div>
     <div style={{ fontSize: '0.8em', padding: '1em' }}>

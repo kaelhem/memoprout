@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import logo from './logo.svg'
+import logo from 'icons/logo.svg'
 
 const Header = () => (
   <Fragment>

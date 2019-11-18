@@ -177,3 +177,18 @@ button:disabled, button:disabled:hover {
   position: fixed;
   margin: 10px;
 }
+
+.opensource-icons, .opensource-icons div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 80vw;
+  flex-wrap: wrap;
+}
+
+.opensource-icons div {
+  margin: 1em;
+  border-radius: 50%;
+  background: #fff;
+  padding: 3vh;
+}

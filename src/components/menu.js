@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
-import logo from './logo-filled.svg'
-import logoNotFilled from 'blocks/logo.svg'
+import logo from 'icons/logo-filled.svg'
+import logoNotFilled from 'icons/logo.svg'
 import { slide as Menu } from 'react-burger-menu'
 import './burger-menu.css'
 
