@@ -6,7 +6,23 @@ Version 1.0 - mis à jour le 18 novembre 2019
 
 
 
+
+
+
+
+
+
+
+
 ![](https://raw.githubusercontent.com/kaelhem/memoprout/master/resources/user-guide/logo.png)
+
+
+
+
+
+
+
+
 
 
 
@@ -41,13 +57,9 @@ Après avoir mis le **bouton marche/arrêt sur _ON_**, MemoProut Pad© affiche l
 
 
 
-
-
 ## Les contrôles
 
 ![](https://raw.githubusercontent.com/kaelhem/memoprout/master/resources/user-guide/schema-buttons.png)
-
-
 
 ### Menu
 
