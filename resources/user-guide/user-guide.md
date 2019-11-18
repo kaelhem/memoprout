@@ -59,11 +59,11 @@ Après avoir mis le **bouton marche/arrêt sur _ON_**, MemoProut Pad© affiche l
 
 Dans le menu, les boutons correspondant aux commandes standards sont éclairés.
 
-⌘) changer le mode de jeu
-★) meilleur score
-vol+) augmenter le volume
-vol-) diminuer le volume
-▶) commencer une nouvelle partie
++ ⌘) changer le mode de jeu
++ ★) meilleur score
++ vol+) augmenter le volume
++ vol-) diminuer le volume
++ ▶) commencer une nouvelle partie
 
 ##### Commande cachée
 
@@ -73,10 +73,10 @@ Un appui long sur n'importe quel bouton permet de revenir au menu.
 
 ### Pendant une partie
 
-⌘ + ▶) rejouer toute la séquence
-⌘ + ★) quitter la partie et retourner au menu
-▶ + vol+) augmenter le volume
-▶ + vol-) diminuer le volume
++ ⌘ + ▶) rejouer toute la séquence
++ ⌘ + ★) quitter la partie et retourner au menu
++ ▶ + vol+) augmenter le volume
++ ▶ + vol-) diminuer le volume
 
 
 
@@ -104,13 +104,13 @@ Chaque nouveau son apporté à la séquence rapporte un point. Le meilleur score
 
 Il existe 4 modes de jeu différents. 
 
-* **Classic: ** Le MemoProut originel, créé en l'an de grâce 2009. C'est par lui que tout à commencé. Dans cette version, les sons joués forment des phrases hallucinées à l'humour parfois douteux.
+* **Classic:** Le MemoProut originel, créé en l'an de grâce 2009. C'est par lui que tout à commencé. Dans cette version, les sons joués forment des phrases hallucinées à l'humour parfois douteux.
 
-* **Kids: ** Basée sur la version _Classic_, cette version édulcoré est agréablement vocalisée par les plus beaux enfants du monde.
+* **Kids:** Basée sur la version _Classic_, cette version édulcoré est agréablement vocalisée par les plus beaux enfants du monde.
 
-* **Cinema: ** La nostalgie vous tend les bras avec cette version cinema et ses extraits de films en guise de sons. Choisis minutieusement, ces moments cultes émerveilleront votre mémoire !
+* **Cinema:** La nostalgie vous tend les bras avec cette version cinema et ses extraits de films en guise de sons. Choisis minutieusement, ces moments cultes émerveilleront votre mémoire !
 
-* **Music: ** La _rock n' roll_ attitude façon MemoProut !
+* **Music:** La _rock n' roll_ attitude façon MemoProut !
 
 
 
