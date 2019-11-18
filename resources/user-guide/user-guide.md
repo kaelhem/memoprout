@@ -10,7 +10,7 @@ Version 1.0 - mis à jour le 18 novembre 2019
 
 
 
-![](./logo.png)
+![](https://raw.githubusercontent.com/kaelhem/memoprout/master/resources/logo.png)
 
 
 
