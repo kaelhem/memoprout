@@ -8,8 +8,9 @@ const Description = () => (
       <div className="picture-caption">Votre compagnon de toilettes idéal !</div>
     </div>
     <div style={{ fontSize: '0.8em', padding: '1em' }}>
-      <p>MemoProut Pad est un jeu de mémorisation. Au début, un son est joué et un bouton est rétro-éclairé. Il faut appuyer sur ce bouton. Un autre son est joué lié à un autre bouton. Il faut maintenant répéter la séquence complète en repartant du premier bouton. Et ainsi de suite...</p>
-      <p>Alors, saurez-vous faire prouter les scores ?</p>
+      <p>MemoProut Pad est un jeu de mémorisation.</p>
+      <p>Au début de la partie, un son est joué et un bouton est rétro-éclairé. Il faut alors appuyer sur ce bouton. Ensuite, un autre son est joué lié à un autre bouton. Il faut maintenant répéter la séquence complète en repartant du premier bouton. Et ainsi de suite...</p>
+      <p>Alors, saurez-vous faire <span style={{fontStyle: 'italic'}}>péter</span> les scores ?</p>
     </div>
     <div style={{ background: '#ccc', width: '60vw', padding: '1.5em' }}>
       <ul className="features-list">

@@ -1,3 +1,7 @@
+h2 {
+  max-width: 830px;
+}
+
 .page-header {
   position: fixed;
   background: #fff;
