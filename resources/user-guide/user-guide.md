@@ -1,6 +1,6 @@
 # MemoProut Pad© - Guide de l'utilisateur
 
-Version 1.0 - mis à jour le 18 novembre 2019
+Version 1.0 - mis à jour le 21 novembre 2019
 
 
 
@@ -61,7 +61,7 @@ MemoProut Pad© est un jeu audio adapté aux pas trop petits et aux plus grands
 
 ## Démarrage
 
-Après avoir mis le **bouton marche/arrêt sur _ON_**, MemoProut Pad© affiche le message _PROUT_ et joue le son de démarrage.
+Après avoir mis le **bouton marche/arrêt sur _ON_**, MemoProut Pad© affiche le message _PROUT_ et joue le délicat son de démarrage.
 
 
 
@@ -69,7 +69,9 @@ Après avoir mis le **bouton marche/arrêt sur _ON_**, MemoProut Pad© affiche l
 
 
 
-![](./schema-buttons.png)
+<div style="padding: 0 50px;"><img style="margin: auto;" src="./schema-buttons.png" /></div>
+
+
 
 
 
@@ -77,7 +79,7 @@ Après avoir mis le **bouton marche/arrêt sur _ON_**, MemoProut Pad© affiche l
 
 ##### Commandes standards
 
-Dans le menu, les boutons correspondant aux commandes standards sont éclairés.
+Dans le menu, les boutons correspondants aux commandes standards sont éclairés.
 
 + ⌘) changer le mode de jeu
 + ☆) meilleur score
@@ -127,9 +129,9 @@ Il existe 4 modes de jeu différents.
 
 * **Classic:** Le MemoProut originel, créé en l'an de grâce 2009. C'est par lui que tout à commencé. Dans cette version, les sons joués forment des phrases hallucinées à l'humour parfois douteux.
 
-* **Kids:** Basée sur la version _Classic_, cette version édulcoré est agréablement vocalisée par les plus beaux enfants du monde.
+* **Kids:** Basée sur la version _Classic_, cette version édulcorée est agréablement vocalisée par les plus beaux enfants du monde.
 
-* **Cinema:** La nostalgie vous tend les bras avec cette version cinema et ses extraits de films en guise de sons. Choisis minutieusement, ces moments cultes émerveilleront votre mémoire !
+* **Cinema:** La nostalgie vous tend les bras avec cette version cinema et ses extraits de films en guise de sons. Choisis minutieusement, ces moments cultes sont autant de délicieuses petites madeleines de Prout !
 
 * **Music:** La _rock n' roll_ attitude façon MemoProut !
 
@@ -216,13 +218,13 @@ Cet objet de convoitise unique à la finition exceptionnelle fera de toi la pers
 
 **Les sons se jouent au ralenti, ou ne se jouent plus du tout.**
 
-> Il est surement temps de changer la pile !
+> Il est sûrement temps de changer la pile !
 
 
 
-**Ca me dit tout le temps "t'es trop trop nul".**
+**Ça me dit tout le temps "t'es trop trop nul(le)".**
 
-> Entraine-toi, persévère et tu seras recompensé !
+> Entraine-toi, persévère et tu seras récompensé(e) !
 
 
 
@@ -242,6 +244,12 @@ Cet objet de convoitise unique à la finition exceptionnelle fera de toi la pers
 
 
 
+**J'ai une mémoire pourrie. Puis-je utiliser MemoProut Pad© comme coussin péteur ?**
+
+> Oui, bien sûr. Il suffit de placer MemoProut Pad© à côté de votre cible et de l'allumer discrètement. Attention, ne pas le placer sous les fesses de votre cible (voir la section _Mise en garde_).
+
+
+
 **Un autre problème ?**
 
 > Tu peux consulter la FAQ sur le site web : memoproutpad.netlify.com
@@ -251,12 +259,6 @@ Cet objet de convoitise unique à la finition exceptionnelle fera de toi la pers
 
 
 _La plupart des problèmes de MemoProut Pad© peuvent se règler magiquement en tapant dessus, avec suffisamment de vigueur pour réparer le problème, mais pas trop d'acharnement pour ne pas en créer un nouveau._
-
-
-
-
-
-
 
 
 
