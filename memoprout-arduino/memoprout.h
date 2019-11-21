@@ -6,10 +6,17 @@
 #ifndef memoprout_h
 #define memoprout_h
 
+#define DEBUG_MODE false
+
 struct GameSound {
   byte kind;
   byte variant;
   byte buttonId;
+};
+
+struct GameObject {
+  char gameName[8];
+  bool hasSentences;
 };
 
 #endif

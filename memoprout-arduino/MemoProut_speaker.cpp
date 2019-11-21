@@ -6,14 +6,14 @@
 #include "Arduino.h"
 #include "MemoProut_speaker.h"
 #include "MemoProut_pins.h"
-#include "MemoProut_config.h"
+#include "MemoProut.h"
 #include <SPI.h>
 #include <SD.h>
 #include <avr/pgmspace.h>
 
 MemoProut_speaker::MemoProut_speaker()
 {
-  soundVolume = DEFAULT_VOLUME;
+  soundVolume = 4;
   canUpVolume = true;
   canDownVolume = true;
   isSdReady = true;
@@ -39,7 +39,7 @@ bool MemoProut_speaker::isReady()
 void MemoProut_speaker::playSound(String filename)
 {
   if (DEBUG_MODE) {
-    Serial.println("Will play: " + filename); 
+    Serial.println("Will play: " + filename);
   }
   if (SD.exists(filename)) {
     tmrpcm.play(filename.c_str());

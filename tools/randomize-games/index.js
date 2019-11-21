@@ -40,12 +40,12 @@ const generateBasicGame = () => {
   return game
 }
 
-const generateSimpleGame = () => {
+const generateSimpleGame = (size=28) => {
   const buttons = shuffleButtons()
-  const sounds = shuffle(28)
+  const sounds = shuffle(size)
   
-  const game = new Uint8Array(3 * 28)
-  for (let i  = 0; i < 28; ++i) {
+  const game = new Uint8Array(3 * size)
+  for (let i  = 0; i < size; ++i) {
     const idx = i * 3
     game[idx] = 0
   	game[idx + 1] = sounds.shift()
@@ -59,11 +59,13 @@ if (fs.existsSync('generated')) {
 }
 fs.mkdirSync('generated')
 
+// save games random values
 for (let i = 0; i < 255; ++i) {
   fs.appendFileSync('generated/BASIC.PRT', Buffer.from(generateBasicGame()))
   fs.appendFileSync('generated/KIDS.PRT', Buffer.from(generateBasicGame()))
   fs.appendFileSync('generated/CINEMA.PRT', Buffer.from(generateSimpleGame()))
   fs.appendFileSync('generated/MUSIC.PRT', Buffer.from(generateSimpleGame()))
+  fs.appendFileSync('generated/ORDI.PRT', Buffer.from(generateSimpleGame(24)))
 }
 
 console.log('done.')

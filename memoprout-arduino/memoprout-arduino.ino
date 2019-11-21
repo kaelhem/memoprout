@@ -2,13 +2,11 @@
 #include "MemoProut_controller.h"
 #include "MemoProut_speaker.h"
 #include "MemoProut_pins.h"
-#include "MemoProut_config.h"
 #include <avr/pgmspace.h>
 
 #define NO_PRESSED_BUTTON 255
 
 // MAIN STATES
-#define WAIT 255
 #define STARTUP 0
 #define MENU 1
 #define GAME_LOOP 2
@@ -21,17 +19,11 @@
 #define WAIT_BUTTON 2
 #define REPLAY_ALL 3
 
-const char *BASIC = "BASIC";
-const char *KIDS = "KIDS";
-const char *CINEMA = "CINEMA";
-const char *MUSIC = "MUSIC";
-const char *gameBufferFile = "GAME.PRT";
-const char *scoreBufferFile = "SCORE.PRT";
-const char *configBufferFile = "CFG.PRT";
+GameObject currentGameObject;
+unsigned long lastGameListPos = 0;
 
 byte mainState = STARTUP;
 byte gameState = PLAY_SOUND;
-char *gameKind = BASIC;
 byte globalGameIndex = 0;
 
 MemoProut_speaker speaker = MemoProut_speaker();
@@ -41,7 +33,7 @@ byte checkLedIndex = 0;
 
 void checkLeds() {
   if (DEBUG_MODE) {
-    Serial.println("check leds");
+    Serial.println(F("check leds"));
   }
   controller.listenButtons();
   if (controller.currentPressedButton != NO_PRESSED_BUTTON) {
@@ -62,13 +54,41 @@ void checkLeds() {
 
 void setup() {
   Serial.begin(9600);
+  while (!Serial) {
+    ; // wait for serial port to connect. Needed for native USB port only
+  }
   speaker.init();
   controller.init();
 }
 
+String getCurrentGameName() {
+  return String(currentGameObject.gameName);
+}
+
+void setNextGameObject() {
+  File gameListFile = SD.open(F("GAMES.PRT"), FILE_READ);
+  if (gameListFile) {
+    gameListFile.seek(lastGameListPos);
+    String buffer = gameListFile.readStringUntil(' ');
+    buffer.trim();
+    String kindStr = gameListFile.readStringUntil('\n');
+    kindStr.trim();
+    byte kind = byte(kindStr.toInt());
+    lastGameListPos = gameListFile.position() < gameListFile.size() ? gameListFile.position() : 0;
+    gameListFile.close();
+    buffer.toCharArray(currentGameObject.gameName, buffer.length() +1);
+    currentGameObject.hasSentences = kind == 1;
+  } else {
+    while (true) {
+      controller.blinkLed(controller.LED_KO, 2, 100);
+      controller.showMessage(F("NO CONFIG"), 150);
+    }
+  }
+}
+
 void loadConfig() {
-  if (SD.exists(configBufferFile)) {
-    File configFile = SD.open(configBufferFile, FILE_READ);
+  File configFile = SD.open(F("CONFIG.PRT"), FILE_READ);
+  if (configFile) {
     globalGameIndex = configFile.read();
     speaker.setVolume(configFile.read());
     configFile.close();
@@ -76,10 +96,10 @@ void loadConfig() {
 }
 
 void saveConfig() {
-  if (SD.exists(configBufferFile)) {
-    SD.remove(configBufferFile);
+  if (SD.exists(F("CONFIG.PRT"))) {
+    SD.remove(F("CONFIG.PRT"));
   }
-  File configFile = SD.open(configBufferFile, FILE_WRITE);
+  File configFile = SD.open(F("CONFIG.PRT"), FILE_WRITE);
   configFile.write(globalGameIndex);
   configFile.write(speaker.getVolume());
   configFile.close();
@@ -96,13 +116,14 @@ void startup() {
     controller.showMessage(F("NO SD"), 150);
   } else {
     loadConfig();
+    setNextGameObject();
     controller.blinkLed(controller.LED_OK, 1, 100);
     speaker.playSound(F("PROUTS/P1.WAV"));
     controller.showMessage(F("PROUT"), 120);
     speaker.stopSound();
     controller.resetLeds();
     mainState = MENU;
-    speaker.playSoundAndWait(F("UI/BASIC.WAV"));
+    speaker.playSoundAndWait(getCurrentGameName() + F("/GAME.WAV"));
   }
 }
 
@@ -110,7 +131,8 @@ void gotoState(byte state) {
   if (DEBUG_MODE) {
     Serial.println("will go on state " + String(state));
   }
-  mainState = WAIT;
+  // WAIT
+  mainState = 255;
   while (controller.currentPressedButton != NO_PRESSED_BUTTON) {
     controller.listenButtons();
   }
@@ -121,16 +143,8 @@ void gotoState(byte state) {
 }
 
 void switchGameKind() {
-  if (gameKind == BASIC) {
-    gameKind = KIDS;
-  } else if (gameKind == KIDS) {
-    gameKind = CINEMA;
-  } else if (gameKind == CINEMA) {
-    gameKind = MUSIC;
-  } else {
-    gameKind = BASIC;
-  }
-  speaker.playSoundAndWait("UI/" + String(gameKind) + F(".WAV"));
+  setNextGameObject();
+  speaker.playSoundAndWait(getCurrentGameName() + F("/GAME.WAV"));
 }
 
 void upVolume() {
@@ -196,7 +210,7 @@ void prepareNewGame() {
 
   // read the next game ref (pre-registered random values)
   byte randomGame[84];
-  File refGameFile = SD.open("GAMES/" + String(gameKind) + F(".PRT"), FILE_READ);
+  File refGameFile = SD.open("GAMES/" + getCurrentGameName() + F(".PRT"), FILE_READ);
   refGameFile.seek(84 * globalGameIndex);
   for (i = 0; i < 84; ++i) {
     randomGame[i] = refGameFile.read();
@@ -204,10 +218,10 @@ void prepareNewGame() {
   refGameFile.close();
 
   // write this game in buffer file
-  if (SD.exists(gameBufferFile)) {
-    SD.remove(gameBufferFile);
+  if (SD.exists(F("TMP.PRT"))) {
+    SD.remove(F("TMP.PRT"));
   }
-  File gameFile = SD.open(gameBufferFile, FILE_WRITE);
+  File gameFile = SD.open(F("TMP.PRT"), FILE_WRITE);
   for (i = 0; i < 84; ++i) {
     gameFile.write(randomGame[i]);
   }
@@ -219,7 +233,7 @@ void prepareNewGame() {
 
 GameSound getGameSoundAt(byte index) {
   delay(10);
-  File gameFile = SD.open(gameBufferFile, FILE_READ);
+  File gameFile = SD.open(F("TMP.PRT"), FILE_READ);
   gameFile.seek(index * 3);
   GameSound gameSound = {};
   gameSound.kind = gameFile.read();
@@ -233,8 +247,8 @@ GameSound getGameSoundAt(byte index) {
 }
 
 byte readHiScore() {
-  if (SD.exists(scoreBufferFile)) {
-    File scoreFile = SD.open(scoreBufferFile, FILE_READ);
+  File scoreFile = SD.open(F("SCORE.PRT"), FILE_READ);
+  if (scoreFile) {
     byte readScore = scoreFile.read();
     scoreFile.close();
     return readScore;
@@ -243,10 +257,10 @@ byte readHiScore() {
 }
 
 void writeHiScore(byte newScore) {
-  if (SD.exists(scoreBufferFile)) {
-    SD.remove(scoreBufferFile);
+  if (SD.exists(F("SCORE.PRT"))) {
+    SD.remove(F("SCORE.PRT"));
   }
-  File scoreFile = SD.open(scoreBufferFile, FILE_WRITE);
+  File scoreFile = SD.open(F("SCORE.PRT"), FILE_WRITE);
   scoreFile.write(newScore);
   scoreFile.close();
 }
@@ -345,8 +359,8 @@ void gameOver() {
     byte scoreSoundIndex = max(0, min(score, 10));
     speaker.playSoundAndWait("SCORE/S" + String(scoreSoundIndex) + F(".WAV"));
   }
-  if (score < 3) {
-    speaker.playSound(String(gameKind) + F("/LOOSE.WAV"));
+  if (score < 5) {
+    speaker.playSound(getCurrentGameName() + F("/LOOSE.WAV"));
   }
   controller.showMessage(F("YOU LOOSE"), 160);
   while (speaker.isPlaying()) {
@@ -366,14 +380,15 @@ void loop() {
 }
 
 String getFilename(byte soundKindIndex, byte soundVariantIndex) {
-  if (gameKind == CINEMA || gameKind == MUSIC) {
-    return String(gameKind) + "/M" + String(soundVariantIndex) + F(".WAV");
+  if (currentGameObject.hasSentences) {
+    char *sndId[] = {
+      "SUBJECT",
+      "VERB",
+      "COMP",
+      "INTER"
+    };
+    return getCurrentGameName() + "/" + String(sndId[soundKindIndex]) + String(soundVariantIndex) + F(".WAV"); 
+  } else {
+    return getCurrentGameName() + "/M" + String(soundVariantIndex) + F(".WAV");
   }
-  char *sndId[] = {
-    "SUBJECT",
-    "VERB",
-    "COMP",
-    "INTER"
-  };
-  return String(gameKind) + "/" + String(sndId[soundKindIndex]) + String(soundVariantIndex) + F(".WAV");
 }
