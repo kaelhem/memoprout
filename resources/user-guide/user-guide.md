@@ -14,6 +14,8 @@ Version 1.0 - mis à jour le 18 novembre 2019
 
 
 
+
+
 ![](https://raw.githubusercontent.com/kaelhem/memoprout/master/resources/user-guide/logo.png)
 
 
@@ -24,13 +26,21 @@ Version 1.0 - mis à jour le 18 novembre 2019
 
 
 
+<div style="text-align: center; font-weight: bold; font-size: 28px;">
+MemoProut Pad© est un jeu audio adapté aux pas trop petits et aux plus grands
+</div>
 
 
-#### MemoProut Pad© est un jeu audio adapté aux pas trop petits et aux plus grands.
 
 
 
-![](https://raw.githubusercontent.com/kaelhem/memoprout/master/resources/user-guide/schema.png)
+
+
+![](./schema.png)
+
+
+
+
 
 1. haut-parleur
 2. bouton marche/arrêt
@@ -55,11 +65,13 @@ Après avoir mis le **bouton marche/arrêt sur _ON_**, MemoProut Pad© affiche l
 
 
 
-
-
 ## Les contrôles
 
-![](https://raw.githubusercontent.com/kaelhem/memoprout/master/resources/user-guide/schema-buttons.png)
+
+
+![](./schema-buttons.png)
+
+
 
 ### Menu
 
@@ -68,14 +80,14 @@ Après avoir mis le **bouton marche/arrêt sur _ON_**, MemoProut Pad© affiche l
 Dans le menu, les boutons correspondant aux commandes standards sont éclairés.
 
 + ⌘) changer le mode de jeu
-+ ★) meilleur score
++ ☆) meilleur score
 + vol+) augmenter le volume
 + vol-) diminuer le volume
 + ▶) commencer une nouvelle partie
 
 ##### Commande cachée
 
-Il existe une commande cachée permettant de lancer un programme de vérification de l'état des leds. Pour lancer ce programme, il suffit d'appuyer sur le bouton situé dans la **4eme colonne** et la **2eme ligne**.
+Il existe une commande cachée permettant de lancer un programme de vérification de l'état des leds. Pour lancer ce programme, il suffit d'appuyer sur le bouton ✔️ (situé dans la 4eme colonne et 2eme ligne).
 
 Un appui long sur n'importe quel bouton permet de revenir au menu.
 
@@ -83,14 +95,12 @@ Un appui long sur n'importe quel bouton permet de revenir au menu.
 
 ### Pendant une partie
 
+Pendant une partie, tu peux effectuer des combinaisons de touches pour effectuer des actions. Il te suffit d'appuyer sur deux boutons en même temps. Les combinaisons possibles sont :
+
 + ⌘ + ▶) rejouer toute la séquence
-+ ⌘ + ★) quitter la partie et retourner au menu
++ ⌘ + ☆) quitter la partie et retourner au menu
 + ▶ + vol+) augmenter le volume
 + ▶ + vol-) diminuer le volume
-
-
-
-
 
 
 
@@ -129,6 +139,24 @@ Il existe 4 modes de jeu différents.
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## Mise en garde
 
 - Ne pas jeter sur la voie publique
@@ -154,19 +182,65 @@ Cet objet de convoitise unique à la finition exceptionnelle fera de toi la pers
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## Problèmes et solutions
 
 **Les sons se jouent au ralenti, ou ne se jouent plus du tout.**
 
 > Il est surement temps de changer la pile !
 
+
+
 **Ca me dit tout le temps "t'es trop trop nul".**
 
 > Entraine-toi, persévère et tu seras recompensé !
 
+
+
 **Lorsque j'allume mon MemoProut Pad© l'indicateur de réponse clignote en rouge et un message "NO SD" apparait sur les boutons.**
 
 > Vérifie que la carte SD soit correctement mise.
+
+
+
+**Lorsque j'allume mon MemoProut Pad© l'indicateur de réponse clignote en rouge et un message "NO CONFIG" apparait sur les boutons.**
+
+> La carte SD ne contient pas les bonnes données.
+>
+> Il faut remettre dessus les données d'origine. Pour récupérer les données, télécharge ce fichier zip : https://github.com/kaelhem/memoprout/archive/master.zip et dézippe-le.
+>
+> Copie ensuite le contenu du repertoire _master/data_ à la racine de la carte SD.
+
+
 
 **Un autre problème ?**
 
@@ -174,7 +248,15 @@ Cet objet de convoitise unique à la finition exceptionnelle fera de toi la pers
 
 
 
+
+
 _La plupart des problèmes de MemoProut Pad© peuvent se règler magiquement en tapant dessus, avec suffisamment de vigueur pour réparer le problème, mais pas trop d'acharnement pour ne pas en créer un nouveau._
+
+
+
+
+
+
 
 
 
