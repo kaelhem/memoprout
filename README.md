@@ -1,8 +1,9 @@
-![](https://raw.githubusercontent.com/kaelhem/memoprout/master/resources/logo.svg?sanitize=true)
-
-
-**This project is a work in progress !**
-
+<p align="center">
+  <img src="https://raw.githubusercontent.com/kaelhem/memoprout/master/resources/logo.svg?sanitize=true">
+  <br/>
+  <br/>
+  <b>This project is a work in progress !</b>
+</p>
 
 # MemoProut Pad
 An open-source Arduino audio game (in french).
