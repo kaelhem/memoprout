@@ -1,8 +1,15 @@
+/*
+  MemoProutPad v1.0 - Created by klem on 06/11/2019
+  An open-source Arduino audio game
+  https://github.com/kaelhem/memoprout  
+*/
 #include "memoprout.h"
 #include "MemoProut_controller.h"
 #include "MemoProut_speaker.h"
 #include "MemoProut_pins.h"
 #include <avr/pgmspace.h>
+
+#define APP_VERSION 1
 
 #define NO_PRESSED_BUTTON 255
 
@@ -29,6 +36,130 @@ byte globalGameIndex = 0;
 MemoProut_speaker speaker = MemoProut_speaker();
 MemoProut_controller controller = MemoProut_controller();
 
+String serialCommand;
+
+void setup() {
+  Serial.begin(57600);
+  while (!Serial) {
+    ;
+  }
+  speaker.init();
+  controller.init();
+}
+
+void loop() {
+  if (Serial.available()) {
+    updateMode();
+  } else {
+    switch(mainState) {
+      case STARTUP: startup(); break;
+      case MENU: menu(); break;
+      case GAME_LOOP: gameLoop(); break;
+      case GAME_OVER: gameOver(); break;
+      case CHECK_LEDS: checkLeds(); break;
+    }
+  }
+}
+
+/**
+ * Allow serial communication with host
+ */
+void updateMode() {
+  controller.lightUp(controller.LED_OK);
+  while(true) {
+    readCommand();
+    executeCommand();
+  }
+}
+
+void readCommand() {
+  bool done = false;
+  serialCommand = "";
+  while (!done) {
+    if (Serial.available()) {
+      char c = Serial.read();
+      if (c!=10 && c!=13) {
+        serialCommand += c;
+      } else if (serialCommand != "") {
+        done = true;
+      }
+    }
+  }
+}
+
+/**
+ * Execute command received by host on serial
+ */
+void executeCommand() {
+  Serial.println(serialCommand);
+  if (serialCommand == F("UP")) {
+    startFileUpload();
+  } else if (serialCommand.charAt(0) == 'L' && serialCommand.length() >= 2) {
+    byte ledIndex = byte(serialCommand.substring(1).toInt());
+    if (ledIndex >= 0 && ledIndex < 30) {
+      controller.lightUp(ledIndex);
+      delay(1000);
+      controller.lightUp(controller.LED_OK);
+    }
+  } else if (serialCommand == F("CALIB")) {
+    calibrateLedButtons();
+  } else {
+    Serial.println(F("command unknown"));
+  }
+  serialCommand = "";
+}
+
+void calibrateLedButtons() {
+  Serial.println(F("Calibration des boutons"));
+  byte i;
+  for (i = 0; i < 28; ++i) {
+    while(controller.currentPressedButton == NO_PRESSED_BUTTON) {
+      controller.listenButtons();
+    }
+    Serial.println(controller.currentPressedButton);
+    while(controller.currentPressedButton != NO_PRESSED_BUTTON) {
+      controller.listenButtons();
+    }
+  }
+  Serial.println(F("Done."));
+}
+
+void startFileUpload() {
+  readCommand();// get file name
+  char *filename = serialCommand.c_str();
+  if (SD.exists(filename)) {
+    Serial.println(0); // file already exists
+  } else {
+    Serial.println(1); // wait file size
+    readCommand();
+    unsigned long len = serialCommand.toInt();
+    if (len == 0) {
+      Serial.println(0); // file size invalid
+    } else {
+      byte buf[256];
+      byte bufferPos = 0;
+      unsigned long copied = 0;
+      Serial.println(1); // ready to receive file data
+      File file = SD.open(filename, FILE_WRITE);
+      while (copied < len) {
+        if (Serial.available()) {
+          buf[bufferPos] = Serial.read();
+          ++copied;
+          ++bufferPos;
+        }
+        if (sizeof(buf) == 256) {
+          file.write(buf, 256);
+          bufferPos = 0;
+        }
+      }
+      if (bufferPos > 0) {
+        file.write(buf, bufferPos);
+      }
+      file.close(); 
+    }
+  }
+}
+
 byte checkLedIndex = 0;
 
 void checkLeds() {
@@ -50,15 +181,6 @@ void checkLeds() {
       delay(200);
     }
   }
-}
-
-void setup() {
-  Serial.begin(9600);
-  while (!Serial) {
-    ; // wait for serial port to connect. Needed for native USB port only
-  }
-  speaker.init();
-  controller.init();
 }
 
 String getCurrentGameName() {
@@ -118,8 +240,8 @@ void startup() {
     loadConfig();
     setNextGameObject();
     controller.blinkLed(controller.LED_OK, 1, 100);
-    speaker.playSound(F("PROUTS/P1.WAV"));
-    controller.showMessage(F("PROUT"), 120);
+    speaker.playSound(F("PROUTS/P9.WAV"));
+    controller.showMessage(F("PROUT"), 100);
     speaker.stopSound();
     controller.resetLeds();
     mainState = MENU;
@@ -367,16 +489,6 @@ void gameOver() {
     delay(1);
   }
   gotoState(MENU);
-}
-
-void loop() {
-  switch(mainState) {
-    case STARTUP: startup(); break;
-    case MENU: menu(); break;
-    case GAME_LOOP: gameLoop(); break;
-    case GAME_OVER: gameOver(); break;
-    case CHECK_LEDS: checkLeds(); break;
-  }
 }
 
 String getFilename(byte soundKindIndex, byte soundVariantIndex) {

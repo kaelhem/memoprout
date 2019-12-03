@@ -7,6 +7,8 @@
 
 #include "Arduino.h"
 #include "FourteenButtons.h"
+#include "memoprout.h"
+#include "MemoProut_ledButton.h"
 
 // multi-touch actions
 #define TOUCH_NONE 0
@@ -14,12 +16,6 @@
 #define TOUCH_2 2
 #define TOUCH_3 3
 #define TOUCH_4 4
-
-struct LedButton {
-  byte ledPin0;
-  byte ledPin1;
-  byte buttonId;
-};
 
 class MemoProut_controller
 {
@@ -37,18 +33,18 @@ class MemoProut_controller
     void blinkLed(byte ledIndex, byte numBlink, uint8_t duration);
     void resetLeds();
     void showMessage(String msg, int msgSpeed = 200);
-    byte getButtonIdAt(byte row, byte col);
     byte getButtonIdAtIndex(byte index);
   private:
     FourteenButtons topButtons;
     FourteenButtons bottomButtons;
-    LedButton leds[4][7];
+    MemoProut_ledButton leds[4][7];
     byte buttonsMap[30][2];
-    
-    String charToLeds(char c);
+
+    byte getButtonIdAt(byte row, byte col);
     void lightUpColumn(byte pattern, byte column);
     void lightUpPanel(byte patterns[]);
 
+    String charToLeds(char c);
     byte charToHex(char c);
     byte numLedsFromScheme(byte ledScheme[7]);
 };

@@ -23,7 +23,9 @@
 // PIN for speaker
 #define SPEAKER_PIN 9
 
+/*
 // Buttons identifier
+//prototype (CNC-WOOD) version !
 #define BT_1 0
 #define BT_2 2
 #define BT_3 4
@@ -52,5 +54,36 @@
 #define BT_26 22
 #define BT_27 24
 #define BT_28 26
+*/
+
+// jlc-pcb version
+#define BT_1 6
+#define BT_2 4
+#define BT_3 5
+#define BT_4 3
+#define BT_5 2
+#define BT_6 1
+#define BT_7 0
+#define BT_8 13
+#define BT_9 12
+#define BT_10 11
+#define BT_11 10
+#define BT_12 9
+#define BT_13 8
+#define BT_14 7
+#define BT_15 20
+#define BT_16 18
+#define BT_17 19
+#define BT_18 17
+#define BT_19 16
+#define BT_20 15
+#define BT_21 14
+#define BT_22 27
+#define BT_23 26
+#define BT_24 25
+#define BT_25 24
+#define BT_26 23
+#define BT_27 22
+#define BT_28 21
 
 #endif

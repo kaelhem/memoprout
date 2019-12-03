@@ -40,11 +40,18 @@ void FourteenButtons::setPin(byte pin)
 
 byte FourteenButtons::readValue()
 {
-  // read analog value each milliseconds, until there are 3 identical values.
+  // read analog value each milliseconds, until there are 5 identical values.
   byte idxButton = 0;
   byte countIdenticals = 0;
   while (countIdenticals < 5) {
-    byte val = (analogRead(_pin) + (1024 / 28)) / (1024 / 14);
+    int pinVal = analogRead(_pin);
+    byte val = (pinVal + (1024 / 28)) / (1024 / 14);
+    // fix issues with bad resistors...
+    if (val == 3) {
+      val = pinVal < 232 ? 3 : 5;
+    } else if (val == 17) {
+      val = pinVal < 232 ? 17 : 19;
+    }
   	if (val == idxButton) {
   	  ++countIdenticals;
   	} else {
