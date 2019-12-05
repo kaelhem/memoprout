@@ -1,16 +1,7 @@
-![](https://raw.githubusercontent.com/kaelhem/memoprout/master/resources/logo.svg?sanitize=true)
+# MemoProut Connect
 
-**This project is a work in progress !**
+This web app allow MemoProut Pad users to :
++ Update the firmware (_Chrome only_)
++ Add / remove game modes (_Chrome only_)
++ Create and share new game modes
 
-# MemoProut Pad
-An open-source Arduino audio game (in french).
-
-In this repository you will find Arduino source code, sounds and everything necessary to make your own MemoProut Pad!
-
-## Contributing
-
-Contributions in any form are welcome! If you find a bug, please [file an issue.](https://github.com/kaelhem/memoprout/issues)
-
-## License
-
-This project is licensed under the MIT license. See the [LICENSE file](./LICENSE) for more details.
