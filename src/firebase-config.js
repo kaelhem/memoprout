@@ -1,5 +1,9 @@
 import firebase from 'firebase/app'
 import 'firebase/auth'
+import 'firebase/firestore'
+import 'firebase/storage'
+import 'firebase/database'
+import { createFirestoreInstance } from 'redux-firestore'
 
 // firebase config
 const firebaseConfig = {
@@ -21,10 +25,12 @@ const config = {
 // Initialize firebase instance
 const init = ({ dispatch }) => {
   firebase.initializeApp(firebaseConfig)
+  firebase.firestore()
   return {
     firebase,
     config,
-    dispatch
+    dispatch,
+    createFirestoreInstance
   }
 }
 

@@ -1,15 +1,13 @@
 import { combineReducers } from 'redux'
 import * as storage from 'redux-storage'
 import { connectRouter } from 'connected-react-router'
-import user from './user'
-import modal from './modal'
-import page from './page'
+import { firebaseReducer } from 'react-redux-firebase'
+import { firestoreReducer } from 'redux-firestore'
 
 const createRootReducer = (history) => storage.reducer(combineReducers({
   router: connectRouter(history),
-  user,
-  modal,
-  page
+  firebase: firebaseReducer,
+  firestore: firestoreReducer
 }))
 
 export default createRootReducer

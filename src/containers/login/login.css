@@ -1,0 +1,13 @@
+.create-account label {
+  width: 160px !important;
+  text-align: right;
+}
+
+.create-account form {
+  display: flex;
+  flex-direction: column;
+}
+
+.create-account form > * {
+  margin: 0.3em auto !important;
+}

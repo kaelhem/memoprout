@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom'
 import { getLocation } from 'connected-react-router'
 
 const entries = [
-  {name: 'Accueil', uid: '/'},
   {name: 'Mon MemoProut Pad', uid: '/mon-memoprout-pad'},
   {name: 'Memo Store', uid: '/memo-store'},
   {name: 'Memo Maker', uid: '/memo-maker'}
