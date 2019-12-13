@@ -7,6 +7,8 @@
 #include "MemoProut_controller.h"
 #include "MemoProut_pins.h"
 #include "MemoProut_ledButton.h"
+#include "MemoProut_calibration.h"
+
 #include <avr/pgmspace.h>
 
 /*
@@ -24,43 +26,7 @@ MemoProut_controller::MemoProut_controller()
       leds[i][j] = MemoProut_ledButton::MemoProut_ledButton();
     }
   }
-  /*
-  //prototype (CNC-WOOD) version !
-  // row 1
-  leds[0][0].init(LED_4, LED_6,  BT_1); // BT_1
-  leds[0][1].init(LED_5, LED_4,  BT_2); // BT_2
-  leds[0][2].init(LED_4, LED_5,  BT_3); // BT_3
-  leds[0][3].init(LED_6, LED_3,  BT_4); // BT_4
-  leds[0][4].init(LED_3, LED_6,  BT_5); // BT_5
-  leds[0][5].init(LED_5, LED_3,  BT_6); // BT_6
-  leds[0][6].init(LED_3, LED_5,  BT_7); // BT_7
-  // row 2
-  leds[1][0].init(LED_6, LED_4,  BT_8); // BT_8
-  leds[1][1].init(LED_4, LED_3,  BT_9); // BT_9
-  leds[1][2].init(LED_3, LED_4, BT_10); // BT_10
-  leds[1][3].init(LED_6, LED_2, BT_11); // BT_11
-  leds[1][4].init(LED_2, LED_6, BT_12); // BT_12
-  leds[1][5].init(LED_5, LED_2, BT_13); // BT_13
-  leds[1][6].init(LED_2, LED_5, BT_14); // BT_14
-  // row 3
-  leds[2][0].init(LED_2, LED_4, BT_15); // BT_15
-  leds[2][1].init(LED_3, LED_2, BT_16); // BT_16
-  leds[2][2].init(LED_2, LED_3, BT_17); // BT_17
-  leds[2][3].init(LED_6, LED_1, BT_18); // BT_18
-  leds[2][4].init(LED_1, LED_6, BT_19); // BT_19
-  leds[2][5].init(LED_5, LED_1, BT_20); // BT_20
-  leds[2][6].init(LED_1, LED_5, BT_21); // BT_21
-  // row 4
-  leds[3][0].init(LED_4, LED_2, BT_22); // BT_22
-  leds[3][1].init(LED_4, LED_1, BT_23); // BT_23
-  leds[3][2].init(LED_1, LED_4, BT_24); // BT_24
-  leds[3][3].init(LED_3, LED_1, BT_25); // BT_25
-  leds[3][4].init(LED_1, LED_3, BT_26); // BT_26
-  leds[3][5].init(LED_2, LED_1, BT_27); // BT_27
-  leds[3][6].init(LED_1, LED_2, BT_28); // BT_28
-  */
   
-  // jlc-pcb version
   // row 1
   leds[0][0].init(LED_5, LED_3, BT_1); // BT_1
   leds[0][1].init(LED_3, LED_5, BT_2); // BT_2
@@ -112,8 +78,8 @@ MemoProut_controller::MemoProut_controller()
   LED_KO = 29;
 
   currentPressedButton = 255;
-  topButtons = FourteenButtons();
-  bottomButtons = FourteenButtons();
+  topButtons = MemoProut_buttons();
+  bottomButtons = MemoProut_buttons();
 }
 
 byte MemoProut_controller::getButtonIdAt(byte row, byte col)
@@ -128,8 +94,9 @@ byte MemoProut_controller::getButtonIdAtIndex(byte index)
 
 void MemoProut_controller::init()
 {
-  topButtons.setPin(PIN_BUTTONS_TOP);
-  bottomButtons.setPin(PIN_BUTTONS_BOTTOM);
+  CalibrationObject calibration = CalibrationUtils::loadCalibration();
+  topButtons.init(PIN_BUTTONS_TOP, calibration);
+  bottomButtons.init(PIN_BUTTONS_BOTTOM, calibration);
   resetLeds();
 }
 

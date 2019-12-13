@@ -11,16 +11,16 @@
 
 struct CalibrationObject {
   unsigned long memoryId;
-  short ledButtons[28];
+  int buttons[14];
 };
 
 class CalibrationUtils
 {
   public:
     CalibrationUtils();
-    bool isCalibrated();
-    CalibrationObject loadCalibration();
-    void saveCalibration(short ledButtons[][7]);
+    static bool isCalibrated();
+    static CalibrationObject loadCalibration();
+    static void saveCalibration(int buttons[14]);
 };
 
 #endif

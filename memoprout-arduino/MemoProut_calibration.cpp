@@ -7,35 +7,30 @@
 #include <EEPROM.h>
 #include "MemoProut_calibration.h"
 									   
-static const unsigned long MEMORY_ID = 201912021;
+static const unsigned long MEMORY_ID = 2712019;
 
 CalibrationUtils::CalibrationUtils() {}
 
-bool CalibrationUtils::isCalibrated() {
+static bool CalibrationUtils::isCalibrated() {
   CalibrationObject calibration;
   EEPROM.get(0, calibration);
-  return calibration.memoryId != MEMORY_ID;
+  return calibration.memoryId == MEMORY_ID;
 }
 
-CalibrationObject CalibrationUtils::loadCalibration() {
+static CalibrationObject CalibrationUtils::loadCalibration() {
   CalibrationObject calibration;
   EEPROM.get(0, calibration);
-  byte error = calibration.memoryId != MEMORY_ID;
-  if (error) {
+  if (calibration.memoryId != MEMORY_ID) {
   	// not yet calibrated!
     Serial.println(F("not yet calibrated!"));
   }
   return calibration;
 }
 
-void CalibrationUtils::saveCalibration(short ledButtons[][7]) {
+static void CalibrationUtils::saveCalibration(int buttons[14]) {
   CalibrationObject calibration;
-  byte idx = 0;
-  for (byte i = 0; i < 4; i++) {
-    for (byte j = 0; j < 7; j++) {
-      calibration.ledButtons[idx] = ledButtons[i][j];
-      ++idx;
-    }
+  for (byte i = 0; i < 14; i++) {
+    calibration.buttons[i] = buttons[i];
   }
   calibration.memoryId = MEMORY_ID;
   EEPROM.put(0, calibration);

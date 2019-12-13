@@ -7,6 +7,7 @@
 #include "MemoProut_controller.h"
 #include "MemoProut_speaker.h"
 #include "MemoProut_pins.h"
+#include "MemoProut_calibration.h"
 #include <avr/pgmspace.h>
 
 #define APP_VERSION 1
@@ -19,6 +20,7 @@
 #define GAME_LOOP 2
 #define GAME_OVER 3
 #define CHECK_LEDS 4
+#define CHECK_BUTTONS 5
 
 // GAME STATES
 #define PREPARE_GAME 0
@@ -38,6 +40,8 @@ MemoProut_controller controller = MemoProut_controller();
 
 String serialCommand;
 
+bool isConnected = false;
+
 void setup() {
   Serial.begin(57600);
   while (!Serial) {
@@ -45,10 +49,17 @@ void setup() {
   }
   speaker.init();
   controller.init();
+  if (!CalibrationUtils::isCalibrated()) {
+    Serial.println(F("NO CALIBRATION !"));
+    controller.lightUp(controller.LED_OK);
+    // TODO : indicate that calibration is starting with messages for user
+    calibrateButtons();
+  }
 }
 
 void loop() {
   if (Serial.available()) {
+    isConnected = true;
     updateMode();
   } else {
     switch(mainState) {
@@ -57,6 +68,7 @@ void loop() {
       case GAME_LOOP: gameLoop(); break;
       case GAME_OVER: gameOver(); break;
       case CHECK_LEDS: checkLeds(); break;
+      case CHECK_BUTTONS: checkButtons(); break;
     }
   }
 }
@@ -66,7 +78,7 @@ void loop() {
  */
 void updateMode() {
   controller.lightUp(controller.LED_OK);
-  while(true) {
+  while(isConnected) {
     readCommand();
     executeCommand();
   }
@@ -102,26 +114,43 @@ void executeCommand() {
       controller.lightUp(controller.LED_OK);
     }
   } else if (serialCommand == F("CALIB")) {
-    calibrateLedButtons();
+    calibrateButtons();
+  } else if (serialCommand == F("EXIT")) {
+    isConnected = false;
   } else {
     Serial.println(F("command unknown"));
   }
   serialCommand = "";
 }
 
-void calibrateLedButtons() {
-  Serial.println(F("Calibration des boutons"));
+void calibrateButtons() {
+  Serial.println(F("Calibration of buttons - it will be store in EEPROM"));
   byte i;
-  for (i = 0; i < 28; ++i) {
-    while(controller.currentPressedButton == NO_PRESSED_BUTTON) {
-      controller.listenButtons();
+  int pinValue = -1;
+  byte countIdenticals;
+  int buttons[14];
+  for (i = 0; i < 14; ++i) {
+    countIdenticals = 0;
+    byte btId = controller.getButtonIdAtIndex(i);
+    controller.lightUp(btId);
+    while(countIdenticals < 3) {
+      int readValue = analogRead(i < 14 ? 1 : 2);
+      if (readValue == pinValue) {
+        ++countIdenticals;
+      } else {
+        countIdenticals = 0;
+        pinValue = readValue < 1000 ? readValue : -1;
+      }
     }
-    Serial.println(controller.currentPressedButton);
-    while(controller.currentPressedButton != NO_PRESSED_BUTTON) {
-      controller.listenButtons();
+    buttons[btId] = pinValue;
+    while(pinValue < 1000) {
+      pinValue = analogRead(i < 14 ? 1 : 2);
     }
+    pinValue = -1;
   }
+  CalibrationUtils::saveCalibration(buttons);
   Serial.println(F("Done."));
+  controller.init();
 }
 
 void startFileUpload() {
@@ -180,6 +209,13 @@ void checkLeds() {
       controller.lightUp(controller.LED_KO);
       delay(200);
     }
+  }
+}
+
+void checkButtons() {
+  controller.listenButtons();
+  if (controller.currentMultiTouchAction != TOUCH_NONE) {
+    gotoState(MENU);
   }
 }
 
@@ -250,9 +286,6 @@ void startup() {
 }
 
 void gotoState(byte state) {
-  if (DEBUG_MODE) {
-    Serial.println("will go on state " + String(state));
-  }
   // WAIT
   mainState = 255;
   while (controller.currentPressedButton != NO_PRESSED_BUTTON) {
@@ -310,6 +343,9 @@ void menu() {
     // hidden features :
     case BT_11:
       gotoState(CHECK_LEDS);
+    break;
+    case BT_18:
+      gotoState(CHECK_BUTTONS);
     break;
   }
   byte ledsToEnlight[] = { BT_1, BT_22, BT_7, BT_14, BT_28 };

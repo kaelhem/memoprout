@@ -44,7 +44,8 @@ void MemoProut_speaker::playSound(String filename)
   if (SD.exists(filename)) {
     tmrpcm.play(filename.c_str());
   } else {
-    tmrpcm.play("PROUTS/P1.WAV");
+    String defaultSound = F("PROUTS/P1.WAV");
+    tmrpcm.play(defaultSound.c_str());
   }
 }
 
@@ -58,7 +59,7 @@ void MemoProut_speaker::playSoundAndWait(String filename)
 
 void MemoProut_speaker::stopSound()
 {
-  tmrpcm.disable();
+  tmrpcm.stopPlayback();
 }
 
 void MemoProut_speaker::upVolume()

@@ -6,8 +6,8 @@
 #define MemoProut_controller_h
 
 #include "Arduino.h"
-#include "FourteenButtons.h"
 #include "memoprout.h"
+#include "MemoProut_buttons.h"
 #include "MemoProut_ledButton.h"
 
 // multi-touch actions
@@ -35,8 +35,9 @@ class MemoProut_controller
     void showMessage(String msg, int msgSpeed = 200);
     byte getButtonIdAtIndex(byte index);
   private:
-    FourteenButtons topButtons;
-    FourteenButtons bottomButtons;
+    CalibrationUtils calibrationUtils;
+    MemoProut_buttons topButtons;
+    MemoProut_buttons bottomButtons;
     MemoProut_ledButton leds[4][7];
     byte buttonsMap[30][2];
 
