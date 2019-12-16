@@ -66,6 +66,7 @@ for (let i = 0; i < 255; ++i) {
   fs.appendFileSync('generated/CINEMA.PRT', Buffer.from(generateSimpleGame()))
   fs.appendFileSync('generated/MUSIC.PRT', Buffer.from(generateSimpleGame()))
   fs.appendFileSync('generated/ORDI.PRT', Buffer.from(generateSimpleGame(24)))
+  fs.appendFileSync('generated/MRMME.PRT', Buffer.from(generateSimpleGame()))
 }
 
 console.log('done.')
