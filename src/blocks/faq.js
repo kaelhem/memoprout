@@ -6,7 +6,8 @@ const data = [
   {question: `C'est quoi ce nom pourri ?`, answer: `Quoi ? Non, il est génial ce nom !`},
   {question: `En vrai, il sert à quoi ce MemoProut Pad ?`, answer: `MemoProut Pad est l'objet indispensable pour lutter contre l'ennui et l'alzheimer. Grâce au MemoProut Pad vous pourrez améliorer votre capacité de mémorisation tout en stimulant votre sens de l'humour !`},
   {question: `Je peux mettre mes propres sons dessus ?`, answer: <span>Oui, il y a même une <a href="https://github.com/kaelhem/memoprout/tree/master/contrib">documentation</a> disponible sur le dépôt Github pour vous expliquer comment faire.</span>},
-  {question: `J'ai un problème avec mon Memoprout Pad, que faire ?`, answer: <span>Si le problème rencontré n'est pas répertorié dans la <a href="https://github.com/kaelhem/memoprout/issues">liste des bugs</a>, vous pouvez l'ajouter.</span>}
+  {question: `J'ai un problème avec mon Memoprout Pad, que faire ?`, answer: <span>Si le problème rencontré n'est pas répertorié dans la <a href="https://github.com/kaelhem/memoprout/issues">liste des bugs</a>, vous pouvez l'ajouter.</span>},
+  {question: `Y aura-t-il des mises-à-jour ?`, answer: `Oui. Il y aura même un outil pour le faire facilement ! Mais cela demande un peu de temps.`}
 ]
 
 const FAQ = () => (
