@@ -1,7 +1,7 @@
 ![](https://raw.githubusercontent.com/kaelhem/memoprout/master/resources/logo.svg?sanitize=true)
 
 # MemoProut Pad
-An open-source Arduino audio game (in french).
+An open-source Arduino audio game (in french only until now...).
 
 In this repository you will find Arduino source code, sounds and everything necessary to make your own MemoProut Pad!
 
