@@ -1,7 +1,5 @@
 ![](https://raw.githubusercontent.com/kaelhem/memoprout/master/resources/logo.svg?sanitize=true)
 
-**This project is a work in progress !**
-
 # MemoProut Pad
 An open-source Arduino audio game (in french).
 
