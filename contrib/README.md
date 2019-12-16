@@ -64,7 +64,7 @@ Afin que votre nouveau mode de jeu puisse fonctionner sur votre MemoProut Pad, i
 
 + copier le dossier précedemment créé sur la racine de la carte SD.
 
-+ dans le dossier _GAMES_ de la carte SD, dupliquer le fichier BASIC.PRT (pour le style _basic_) ou MUSIC.PRT (pour le style _simple_), et le renommer comme le dossier précédemment créé.
++ dans le dossier _GAMES_ de la carte SD, dupliquer le fichier BASIC.PRT (pour le style _basic_) ou MUSIC.PRT (pour le style _simple_), et le renommer comme le dossier précédemment créé en conservant l'extension _.PRT_. Par exemple si votre dossier se nomme _MACHIN_, ce fichier devra être nommé _MACHIN.PRT_.
 
 + à l'aide d'un éditeur de texte, ouvrir le fichier GAMES.PRT se trouvant à la racine de la carte SD et ajouter une ligne contenant le nom de dossier, un espace et un 1 (pour le style _basic) ou un 2 (pour le style _simple_).
 
