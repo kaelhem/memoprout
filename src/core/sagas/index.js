@@ -1,8 +1,9 @@
 import { all, fork } from 'redux-saga/effects'
+import { deviceSaga } from './device'
 
 function *appSaga() {
   yield all([
-    //fork(userSaga),
+    fork(deviceSaga),
   ])
 }
 

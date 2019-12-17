@@ -1,7 +1,7 @@
 import { createStore, compose } from 'redux'
 import { createBrowserHistory } from 'history'
 import createRootReducer from './reducers'
-import createMiddlewares, { runSaga, loadFromLocalStorage } from './middlewares'
+import createMiddlewares, { runSaga } from './middlewares'
 
 const reduxDevTools = window.__REDUX_DEVTOOLS_EXTENSION__ ? window.__REDUX_DEVTOOLS_EXTENSION__() : f => f
 
@@ -15,14 +15,8 @@ const configureStore = (initialState) => {
         store.replaceReducer(createRootReducer(history))
       })
     }
-    const startup = () => {
-      resolve(store)
-    }
     runSaga()
-    loadFromLocalStorage(store).then(startup).catch(err => {
-      console.log(err)
-      startup()
-    })
+    resolve(store)
   })
 }
 

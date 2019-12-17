@@ -7,8 +7,11 @@ const ProtectedRoute = (props) => {
   return !isLogged ? <Redirect to="/" /> : <Route exact path={ path } component={ Component } />
 }
 
-const mapStateToProps = ({ firebase: { auth } }) => ({
-  isLogged: !!auth && !!auth.uid && auth.emailVerified
-})
+const mapStateToProps = ({ firebase }) => {
+  const { auth } = firebase
+  return {
+    isLogged: !!auth && !!auth.uid && auth.emailVerified
+  }
+}
 
 export default connect(mapStateToProps)(ProtectedRoute)
