@@ -58,6 +58,8 @@ export function *connectSaga(action) {
     } else {
       console.log('received: ' + readValue)
     }
+  } else {
+    yield put(deviceMessages.setDisconnected())
   }
 }
 

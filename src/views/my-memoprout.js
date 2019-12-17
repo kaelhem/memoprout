@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { actions as deviceActions } from 'core/reducers/device'
-import { Message, Button, Icon } from 'semantic-ui-react'
+import { Message, Button, Icon, Divider } from 'semantic-ui-react'
 import avrbro from 'avrbro'
 const { isAvailable } = avrbro
 
@@ -23,12 +23,15 @@ const MyMemo = (props) => {
     </Message>
   ) : (
     <Message>
-      <p>Afin de connecter votre MemoProut Pad, branchez-le via le port USB.</p>
+      <p>Afin de connecter votre MemoProut Pad, branchez-le via le port USB. La séquence de démarrage va se lancer.</p>
       <p>Une fois que les leds du menu sont éclairées, cliquez sur le bouton de connexion et sélectionnez <b>cu.usbserial-1410</b></p>
-      <Button loading={ props.isPending } disabled={ props.isPending } onClick={ props.connect }>
-        <Icon name='usb' />
-        Connecter mon MemoProut Pad
-      </Button>
+      <Divider />
+      <div style={{ textAlign: 'center' }}>
+        <Button loading={ props.isPending } disabled={ props.isPending } onClick={ props.connect }>
+          <Icon name='usb' />
+          Connecter mon MemoProut Pad
+        </Button>
+      </div>
     </Message>
   ))
 }

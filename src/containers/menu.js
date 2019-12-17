@@ -21,7 +21,7 @@ const AppMenu = (props) => {
       <Menu text vertical size='large'>
         <Container>
           <NavItems />
-          <div style={{ width: 150, margin: 'auto', textAlign: 'center' }}>
+          <div style={{ margin: 'auto', textAlign: 'center' }}>
             <div style={{ display: 'block', height: 1, background: '#e2e2e2', margin: '1em' }}></div>
             <div style={{ fontWeight: 'bold', marginBottom: '0.5em', display: 'inline-flex' }}><Icon name='user'></Icon>{ props.profile.email }</div>
             <Button onClick={ logOut }>Se déconnecter</Button>

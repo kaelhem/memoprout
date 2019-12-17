@@ -6,7 +6,7 @@ const PageLayout = ({ children }) => (
   <Fragment>
     <div style={{ minHeight: 'calc(100% - 20px)', display: 'flex' }}>
       <Menu />
-      <div style={{ margin: '2em' }}>
+      <div style={{ margin: '2em auto' }}>
         { children }
       </div>
     </div>

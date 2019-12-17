@@ -42,8 +42,12 @@ const MemoStore = () => {
       </div>
     ) : (error ? (
       <Message>Ho non, c'est tout cassé ! Réessayes plus tard, on sait jamais...</Message>
-    ) : <Loader active={true} />)
-  )
+    ) : (
+      <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
+        <Loader active={true} inline='centered' />
+      </div>
+    )
+  ))
 }
 
 export default MemoStore
