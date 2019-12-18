@@ -58,7 +58,7 @@ void setup() {
 }
 
 void loop() {
-  if (Serial.available()) {
+  if (Serial.available() > 0) {
     isConnected = true;
     updateMode();
   } else {
@@ -88,7 +88,7 @@ void readCommand() {
   bool done = false;
   serialCommand = "";
   while (!done) {
-    if (Serial.available()) {
+    if (Serial.available() > 0) {
       char c = Serial.read();
       if (c!=10 && c!=13) {
         serialCommand += c;
@@ -103,24 +103,37 @@ void readCommand() {
  * Execute command received by host on serial
  */
 void executeCommand() {
-  Serial.println(serialCommand);
+  if (DEBUG_MODE) {
+    Serial.println(serialCommand);
+  }
   if (serialCommand == F("UP")) {
     startFileUpload();
-  } else if (serialCommand.charAt(0) == 'L' && serialCommand.length() >= 2) {
-    byte ledIndex = byte(serialCommand.substring(1).toInt());
-    if (ledIndex >= 0 && ledIndex < 30) {
-      controller.lightUp(ledIndex);
-      delay(1000);
-      controller.lightUp(controller.LED_OK);
-    }
   } else if (serialCommand == F("CALIB")) {
     calibrateButtons();
+  } else if (serialCommand == F("VER")) {
+    Serial.println(APP_VERSION);
+  } else if (serialCommand == F("LSGAMES")) {
+    listGames();
   } else if (serialCommand == F("EXIT")) {
     isConnected = false;
   } else {
     Serial.println(F("command unknown"));
   }
   serialCommand = "";
+}
+
+void listGames() {
+  File gameListFile = SD.open(F("GAMES.PRT"), FILE_READ);
+  if (gameListFile) {
+    while (gameListFile.available() > 0) {
+      String buffer = gameListFile.readStringUntil(' ');
+      Serial.println(buffer);
+      gameListFile.readStringUntil('\n');
+    }
+  } else {
+    Serial.println(F("ERR"));
+  }
+  gameListFile.close();
 }
 
 void calibrateButtons() {
@@ -171,7 +184,7 @@ void startFileUpload() {
       Serial.println(1); // ready to receive file data
       File file = SD.open(filename, FILE_WRITE);
       while (copied < len) {
-        if (Serial.available()) {
+        if (Serial.available() > 0) {
           buf[bufferPos] = Serial.read();
           ++copied;
           ++bufferPos;
@@ -274,14 +287,22 @@ void startup() {
     controller.showMessage(F("NO SD"), 150);
   } else {
     loadConfig();
-    setNextGameObject();
     controller.blinkLed(controller.LED_OK, 1, 100);
-    speaker.playSound(F("PROUTS/P9.WAV"));
-    controller.showMessage(F("PROUT"), 100);
-    speaker.stopSound();
-    controller.resetLeds();
-    mainState = MENU;
-    speaker.playSoundAndWait(getCurrentGameName() + F("/GAME.WAV"));
+    unsigned int i = 0;
+    Serial.println(F("STARTUP"));
+    // lets board have time to read potential serial entry (~100ms)
+    while (i < 50000 && Serial.available() == 0) {
+      ++i;
+    }
+    if (Serial.available() == 0) {
+      setNextGameObject();
+      speaker.playSound(F("PROUTS/P9.WAV"));
+      controller.showMessage(F("PROUT"), 100);
+      speaker.stopSound();
+      controller.resetLeds();
+      mainState = MENU;
+      speaker.playSoundAndWait(getCurrentGameName() + F("/GAME.WAV"));
+    }
   }
 }
 
