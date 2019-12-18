@@ -7,7 +7,7 @@ import { getLocation } from 'connected-react-router'
 const entries = [
   {name: 'Mon MemoProut Pad', uid: '/mon-memoprout-pad'},
   {name: 'Memo Store', uid: '/memo-store'},
-  {name: 'Memo Maker', uid: '/memo-maker'}
+  //{name: 'Memo Maker', uid: '/memo-maker'}
 ]
 
 const NavItems = ({ activePath }) => {

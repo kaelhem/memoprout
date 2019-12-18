@@ -11,7 +11,7 @@
     "eject": "react-scripts eject"
   },
   "dependencies": {
-    "avrbro": "^0.0.4",
+    "avrbro": "^0.0.6",
     "connected-react-router": "^6.6.1",
     "core-js": "^3.4.7",
     "firebase": "^7.5.0",

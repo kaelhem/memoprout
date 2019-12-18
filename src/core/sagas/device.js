@@ -1,10 +1,10 @@
-import { all, fork, takeEvery, put, call } from 'redux-saga/effects'
+import { all, fork, takeEvery, put, call, delay } from 'redux-saga/effects'
 import {
   types as deviceTypes,
   messages as deviceMessages
 } from 'core/reducers/device'
 import avrbro from 'avrbro'
-const { openSerial, closeSerial /*, parseHex, flash*/ } = avrbro
+const { openSerial, closeSerial, parseHex, flash, reset } = avrbro
 
 // keep a reference to the serial connection
 let serial = null
@@ -29,26 +29,34 @@ const writeSerial = (str) => {
   }
 }
 
-/*
+const readFileAsync = (file) => {
+  return new Promise((resolve, reject) => {
+    let reader = new FileReader()
+    reader.onload = () => {
+      resolve(reader.result)
+    }
+    reader.onerror = reject
+    reader.readAsArrayBuffer(file)
+  })
+}
+
 const flashHexFile = async () => {
-  try {
-    const response = await fetch('bin/sample.hex')
-    const data = await response.json()
-    const hexBuffer = parseHex(new TextDecoder("utf-8").decode(data))
-    const success = await flash(serial, hexBuffer, { boardName: 'nano' })
-    console.log(success ? 'Success' : 'Fail')
-    
-  } catch(e) {
-    console.log(e)
-  }  
-}*/
+  const response = await fetch('bin/memoproutpad-old-bootloader-v1.hex')
+  const data = await response.blob()
+  const fileData = await readFileAsync(data)
+  const hexBuffer = parseHex(new TextDecoder("utf-8").decode(fileData))
+  await reset(serial)
+  await flash(serial, hexBuffer, { boardName: 'nano' })
+}
 
 export function *connectSaga(action) {
-  console.log('connectSaga');
+  console.log('connectSaga')
   serial = yield call(openSerial)
   if (serial) {
     let readValue = yield call(readSerial)
     if (readValue === 'STARTUP') {
+      yield call(writeSerial, '1')
+      yield call(readSerial)
       yield call(writeSerial, 'VER')
       const version = yield call(readSerial)
       yield call(writeSerial, 'LSGAMES')
@@ -64,11 +72,28 @@ export function *connectSaga(action) {
 }
 
 export function *disconnectSaga(action) {
-  console.log('disconnectSaga', serial);
+  console.log('disconnectSaga')
   serial.reader.cancel()
   yield call(writeSerial, 'EXIT')
   yield call(closeSerial, serial)
   yield put(deviceMessages.setDisconnected())
+}
+
+
+export function *flashSaga(action) {
+  console.log('flashSaga')
+  try {
+    yield call(flashHexFile)
+    let i = 0;
+    while (i < 100) {
+      yield delay(1)
+      yield call(writeSerial, '1')
+      ++i
+    }
+    yield put(deviceMessages.setFlashed())
+  } catch(e) {
+    yield put(deviceMessages.setFlashError())
+  }
 }
 
 export function *watchConnect() {
@@ -79,9 +104,14 @@ export function *watchDisconnect() {
   yield takeEvery(deviceTypes.DISCONNECT, disconnectSaga)
 }
 
+export function *watchFlash() {
+  yield takeEvery(deviceTypes.FLASH, flashSaga)
+}
+
 export function *deviceSaga() {
   yield all([
     fork(watchConnect),
-    fork(watchDisconnect)
+    fork(watchDisconnect),
+    fork(watchFlash)
   ])
 }
