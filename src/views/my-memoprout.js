@@ -17,7 +17,7 @@ const MyMemo = (props) => {
   }
 
   return (
-    <Fragment>
+    <div style={{ width: '80%', margin: 'auto' }}>
     { !isAvailable() ? (
       <Message>
         <p></p>
@@ -58,10 +58,11 @@ const MyMemo = (props) => {
         <p>Une fois que les leds du menu sont éclairées, cliquez sur le bouton de connexion et sélectionnez <b>cu.usbserial-1410</b></p>
         <Divider />
         <div style={{ textAlign: 'center' }}>
-          <Button loading={ props.isPending } disabled={ props.isPending } onClick={ props.connect }>
+          <Button loading={ props.isPending } disabled={ props.isPending } onClick={ props.connect } color='green'>
             <Icon name='usb' />
             Connecter mon MemoProut Pad
           </Button>
+          <p style={{ fontStyle: 'italic' }}>Pour des raisons de sécurité la connexion sera perdue après chaque rafraichissement de page (c'est une limitation du navigateur).</p>
         </div>
       </Message>
     ))}
@@ -102,7 +103,7 @@ const MyMemo = (props) => {
         <Button loading={ props.isFlashing } disabled={ props.isFlashing } onClick={() => setModalOpened(false)} content='Fermer' />
       </Modal.Actions>
     </Modal>
-    </Fragment>
+    </div>
   )
 }
 

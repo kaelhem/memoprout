@@ -1,0 +1,17 @@
+.store-container {
+  width: 80%;
+  margin: auto;
+}
+
+.installed-game-label {
+  margin-left: 5px !important;
+  font-style: italic;
+  position: relative;
+  top: -3px;
+}
+
+.games-loader {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}

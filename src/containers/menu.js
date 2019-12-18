@@ -16,7 +16,7 @@ const AppMenu = (props) => {
   }
 
   return (
-    <div style={{ background: '#aaa', paddingTop: '2em' }}>
+    <div style={{ background: '#ccc', paddingTop: '2em' }}>
       <div style={{ display: 'flex', justifyContent: 'center', margin: '1em auto', width: 60, height: 60, padding: 10, borderRadius: 35, background: '#eee', borderWidth: 3, borderColor: '#999', borderStyle: 'solid' }}>
         <img src={ logo } alt="" onClick={ () => props.push('/') } style={{ cursor: 'pointer' }} />
       </div>
@@ -31,7 +31,7 @@ const AppMenu = (props) => {
               <Fragment>
                 <Separator />
                 <div style={{ fontWeight: 'bold', marginBottom: '0.5em', display: 'inline-flex' }}><Icon name='usb' />MemoProut Pad connecté</div>
-                <div>Version firmware: { props.deviceVersion }</div>
+                <div>Version du firmware: { props.deviceVersion }</div>
               </Fragment>
             )}
           </div>

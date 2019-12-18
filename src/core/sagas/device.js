@@ -49,22 +49,28 @@ const flashHexFile = async () => {
   await flash(serial, hexBuffer, { boardName: 'nano' })
 }
 
+function *enterUpdateMode() {
+  let i = 0
+  while (i < 10) {
+    yield delay(1)
+    yield call(writeSerial, '1')
+    yield call(readSerial)
+    ++i
+  }
+}
+
 export function *connectSaga(action) {
-  console.log('connectSaga')
   serial = yield call(openSerial)
   if (serial) {
     let readValue = yield call(readSerial)
     if (readValue === 'STARTUP') {
-      yield call(writeSerial, '1')
-      yield call(readSerial)
+      yield enterUpdateMode()
       yield call(writeSerial, 'VER')
       const version = yield call(readSerial)
       yield call(writeSerial, 'LSGAMES')
       readValue = yield call(readSerial)
       const games = readValue.split('\n')
       yield put(deviceMessages.setConnected(version, games))
-    } else {
-      console.log('received: ' + readValue)
     }
   } else {
     yield put(deviceMessages.setDisconnected())
@@ -72,7 +78,6 @@ export function *connectSaga(action) {
 }
 
 export function *disconnectSaga(action) {
-  console.log('disconnectSaga')
   serial.reader.cancel()
   yield call(writeSerial, 'EXIT')
   yield call(closeSerial, serial)
@@ -81,15 +86,12 @@ export function *disconnectSaga(action) {
 
 
 export function *flashSaga(action) {
-  console.log('flashSaga')
   try {
     yield call(flashHexFile)
-    let i = 0;
-    while (i < 100) {
-      yield delay(1)
-      yield call(writeSerial, '1')
-      ++i
-    }
+    yield enterUpdateMode()
+    yield call(writeSerial, 'VER')
+    const version = yield call(readSerial)
+    yield put(deviceMessages.setVersion(version))
     yield put(deviceMessages.setFlashed())
   } catch(e) {
     yield put(deviceMessages.setFlashError())
