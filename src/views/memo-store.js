@@ -28,11 +28,11 @@ const GameItem = ({ game, deviceConnected, lsGames, handleInstall, handleUninsta
           deviceConnected ? (
             <Item.Extra>
             { isInstalled ? (
-              <Button basic onClick={ toggleInstall } color='red'>
+              <Button disabled basic onClick={ toggleInstall } color='red'>
                 <Icon name='close' /> Désinstaller
               </Button>
             ) : (
-              <Button basic onClick={ toggleInstall } color='green'>
+              <Button disabled basic onClick={ toggleInstall } color='green'>
                 <Icon name='upload' /> Installer
               </Button>
             )}
