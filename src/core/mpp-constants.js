@@ -1,4 +1,4 @@
-export const LAST_FIRMWARE_VERSION = '1'
+export const LAST_FIRMWARE_VERSION = '1.0'
 
 export const KEYWORDS = [
   'UI',

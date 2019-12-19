@@ -21,6 +21,9 @@ const initialState = {
   isPending: false,
   isConnected: false,
   isInstalling: false,
+  isUninstalling: false,
+  installError: false,
+  uninstallError: false,
   isFlashing: false,
   flashError: false,
   version: null,
@@ -87,11 +90,44 @@ export default function deviceReducer(state = initialState, action = {}) {
         games: action.payload
       }
     }
-    case types.INSTALL:
+    case types.INSTALL: {
+      return {
+        ...state,
+        isInstalling: true,
+        installError: false
+      }
+    }
+    case types.INSTALLED: {
+      return {
+        ...state,
+        isInstalling: false
+      } 
+    }
+    case types.INSTALL_ERROR: {
+      return {
+        ...state,
+        isInstalling: false,
+        installError: true
+      } 
+    }
     case types.UNINSTALL: {
       return {
         ...state,
-        isInstalling: true
+        isUninstalling: true,
+        uninstallError: false
+      }
+    }
+    case types.UNINSTALLED: {
+      return {
+        ...state,
+        isUninstalling: false
+      }
+    }
+    case types.UNINSTALL_ERROR: {
+      return {
+        ...state,
+        isUninstalling: false,
+        uninstallError: true
       }
     }
     default:
@@ -103,8 +139,8 @@ export const actions = {
   connect: () => ({type: types.CONNECT}),
   disconnect: () => ({type: types.DISCONNECT}),
   flash: () => ({type: types.FLASH}),
-  install: (game) => ({type: types.INSTALL, payload: game}),
-  uninstall: (game) => ({type: types.FLASH, payload: game})
+  install: (game, fileUrls, fileNames) => ({type: types.INSTALL, payload: {game, fileUrls, fileNames}}),
+  uninstall: (game) => ({type: types.UNINSTALL, payload: game})
 }
 
 export const messages = {
@@ -113,7 +149,11 @@ export const messages = {
   setFlashed: () => ({type: types.FLASHED}),
   setFlashError: () => ({type: types.FLASH_ERROR}),
   setVersion: (version) => ({type: types.UPDATE_VERSION, payload: version}),
-  setGames: (games) => ({type: types.UPDATE_GAMES, payload: games})
+  setGames: (games) => ({type: types.UPDATE_GAMES, payload: games}),
+  setInstalled: () => ({type: types.INSTALLED}),
+  setInstallError: () => ({type: types.INSTALL_ERROR}),
+  setUninstalled: () => ({type: types.UNINSTALLED}),
+  setUninstallError: () => ({type: types.UNINSTALL_ERROR})
 }
 
 export const selectors = {

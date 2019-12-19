@@ -20,7 +20,11 @@ const Routes = ({ isLargeScreen }) => {
   if (!isLoaded(auth)) {
     return <Loader active={true} />
   } else if (isEmpty(auth) || (auth.uid && !auth.emailVerified)) {
-    return <LoginView {...{isLargeScreen}}  />
+    if (window.location.pathname === '/mentions') {
+      return <Mentions />
+    } else {
+      return <LoginView {...{isLargeScreen}}  />
+    }
   } else {
     return (
       <PageLayout>
