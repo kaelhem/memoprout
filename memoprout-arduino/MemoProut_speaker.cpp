@@ -57,6 +57,11 @@ void MemoProut_speaker::playSoundAndWait(String filename)
   }
 }
 
+void MemoProut_speaker::disableSound()
+{
+  tmrpcm.disable();
+}
+
 void MemoProut_speaker::stopSound()
 {
   tmrpcm.stopPlayback();

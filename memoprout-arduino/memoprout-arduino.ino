@@ -10,7 +10,8 @@
 #include "MemoProut_calibration.h"
 #include <avr/pgmspace.h>
 
-#define APP_VERSION 1
+#define APP_MAJOR_VERSION 1
+#define APP_MINOR_VERSION 0
 
 #define NO_PRESSED_BUTTON 255
 
@@ -77,6 +78,7 @@ void loop() {
  * Allow serial communication with host
  */
 void updateMode() {
+  speaker.disableSound();
   controller.lightUp(controller.LED_OK);
   while(isConnected) {
     readCommand();
@@ -106,12 +108,18 @@ void executeCommand() {
   if (DEBUG_MODE) {
     Serial.println(serialCommand);
   }
-  if (serialCommand == F("UP")) {
-    startFileUpload();
+  if (serialCommand == F("1")) {
+    Serial.println("1");
+  } else if (serialCommand == F("MKDIR")) {
+    createDirectory();
+  } else if (serialCommand == F("UP")) {
+    uploadFile();
   } else if (serialCommand == F("CALIB")) {
     calibrateButtons();
   } else if (serialCommand == F("VER")) {
-    Serial.println(APP_VERSION);
+    Serial.print(APP_MAJOR_VERSION);
+    Serial.print(F("."));
+    Serial.println(APP_MINOR_VERSION);
   } else if (serialCommand == F("LSGAMES")) {
     listGames();
   } else if (serialCommand == F("EXIT")) {
@@ -166,39 +174,61 @@ void calibrateButtons() {
   controller.init();
 }
 
-void startFileUpload() {
+void createDirectory() {
+  readCommand();// get dir name
+  char *dirname = serialCommand.c_str();
+  if (SD.exists(dirname)) {
+    Serial.println(0); // directory already exists
+  } else {
+    SD.mkdir(dirname);
+    Serial.println(1);
+  }
+}
+
+void uploadFile() {
   readCommand();// get file name
   char *filename = serialCommand.c_str();
   if (SD.exists(filename)) {
     Serial.println(0); // file already exists
   } else {
+    File fileToUpload = SD.open(filename, FILE_WRITE);
     Serial.println(1); // wait file size
     readCommand();
     unsigned long len = serialCommand.toInt();
-    if (len == 0) {
-      Serial.println(0); // file size invalid
-    } else {
-      byte buf[256];
-      byte bufferPos = 0;
-      unsigned long copied = 0;
-      Serial.println(1); // ready to receive file data
-      File file = SD.open(filename, FILE_WRITE);
-      while (copied < len) {
+    //byte uploadBuf[255];
+    //byte bufferPos = 0;
+    unsigned long copied = 0;
+    byte chunkSize = 0;
+    Serial.println(1); // ready to receive file data
+    while (copied < len) {
+      if (copied < len && chunkSize < 4096) {
         if (Serial.available() > 0) {
-          buf[bufferPos] = Serial.read();
+          fileToUpload.write(Serial.read());
           ++copied;
-          ++bufferPos;
+          ++chunkSize;
         }
-        if (sizeof(buf) == 256) {
-          file.write(buf, 256);
-          bufferPos = 0;
-        }
+        /*++chunkSize;
+        if (chunkSize == 32) {
+          fileToUpload.flush();
+          chunkSize = 0;
+          //Serial.println(F("CHUNK_OK"));
+        }*/
+      } else if (chunkSize > 0) {
+        fileToUpload.flush();
+        chunkSize = 0;
       }
-      if (bufferPos > 0) {
-        file.write(buf, bufferPos);
-      }
-      file.close(); 
+      /*if (bufferPos == 64) {
+        fileToUpload.flush();
+        bufferPos = 0;
+      }*/
     }
+    /*
+    if (bufferPos > 0) {
+      fileToUpload.write(uploadBuf, bufferPos);
+    }
+    */
+    fileToUpload.close();
+    Serial.println(F("NEXT"));
   }
 }
 
