@@ -80,8 +80,6 @@ Afin que votre nouveau mode de jeu puisse fonctionner sur votre MemoProut Pad, i
   MACHIN 2
   ```
 
-  ⚠️ **Ce fichier doit finir par une (et une seule) ligne vide !**
-
 Et voilà ! Vous pouvez maintenant profiter de votre nouveau mode de jeu personnalisé.
 
 
