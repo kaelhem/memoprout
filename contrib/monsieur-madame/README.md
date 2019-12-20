@@ -15,5 +15,3 @@ Un mode de jeu supplémentaire pour adultes.
 ```
 MRMME 2
 ```
-
-⚠️ **Ce fichier doit finir par une ligne vide !**
