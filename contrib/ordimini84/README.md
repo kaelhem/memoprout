@@ -19,5 +19,3 @@ Un mode de jeu supplémentaire basé sur les sons du memo de l'Ordimini !
 ```
 ORDI 2
 ```
-
-⚠️ **Ce fichier doit finir par une ligne vide !**
