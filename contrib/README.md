@@ -10,7 +10,7 @@ Les sons du MemoProut Pad sont encodés en PCM (8bits), et enregistrés dans des
 
 La méthode la plus simple est d'utiliser [Audacity](https://www.audacityteam.org/) qui est gratuit, open-source et multi-plateforme.
 
-Il y plusieurs étapes à effectuer avec Audacity afin d'encoder chaque dans un format valide pour votre MemoProut Pad.
+Il y plusieurs étapes à effectuer avec Audacity afin d'encoder chaque son dans un format valide pour votre MemoProut Pad.
 
 1. Ouvrez votre fichier sonore avec Audacity.
 
@@ -34,9 +34,9 @@ Il y plusieurs étapes à effectuer avec Audacity afin d'encoder chaque dans un 
 
 ## Créer un nouveau mode de jeu
 
-Il existe 2 styles de jeux différents : _basic_ où les sons joués forment des phrases, et _simple_ où les sons joués s'enchainent sans ordre particulier.
+Il existe 2 styles de jeux différents : _prose_ où les sons joués forment des phrases, et _simple_ où les sons joués s'enchainent sans ordre particulier.
 
-#### Style _basic_
+#### Style _prose_
 
 Pour créér un mode de jeu basé sur des phrases, il faut préparer un dossier avec un nom court (6 lettres max.) en majuscules, contenant :
 
@@ -64,11 +64,11 @@ Afin que votre nouveau mode de jeu puisse fonctionner sur votre MemoProut Pad, i
 
 + copier le dossier précedemment créé sur la racine de la carte SD.
 
-+ dans le dossier _GAMES_ de la carte SD, dupliquer le fichier BASIC.PRT (pour le style _basic_) ou MUSIC.PRT (pour le style _simple_), et le renommer comme le dossier précédemment créé en conservant l'extension _.PRT_. Par exemple si votre dossier se nomme _MACHIN_, ce fichier devra être nommé _MACHIN.PRT_.
++ dans le dossier _GAMES_ de la carte SD, dupliquer le fichier BASIC.PRT (pour le style _prose_) ou MUSIC.PRT (pour le style _simple_), et le renommer comme le dossier précédemment créé en conservant l'extension _.PRT_. Par exemple si votre dossier se nomme _MACHIN_, ce fichier devra être nommé _MACHIN.PRT_.
 
-+ à l'aide d'un éditeur de texte, ouvrir le fichier GAMES.PRT se trouvant à la racine de la carte SD et ajouter une ligne contenant le nom de dossier, un espace et un 1 (pour le style _basic_) ou un 2 (pour le style _simple_).
++ à l'aide d'un éditeur de texte, ouvrir le fichier GAMES.PRT se trouvant à la racine de la carte SD et ajouter une ligne contenant le nom de dossier, un espace et un 1 (pour le style _prose_) ou un 2 (pour le style _simple_).
 
-  >  Par exemple, pour un style de jeu _basic_ et un dossier nommé _MACHIN_, ajouter cette ligne :
+  >  Par exemple, pour un style de jeu _prose_ et un dossier nommé _MACHIN_, ajouter cette ligne :
 
   ```
   MACHIN 1
@@ -86,6 +86,6 @@ Et voilà ! Vous pouvez maintenant profiter de votre nouveau mode de jeu personn
 
 ## Comment partager mon mode jeu ?
 
-Pour partager un nouveau mode de jeu, vous pouvez ouvrir une pull-request sur le GitHub du projet en plaçant votre mode de jeu dans le dossier _"contrib"_ de la branche _master_.
+Pour partager un nouveau mode de jeu, vous pouvez ouvrir une _pull-request_ sur le GitHub du projet en plaçant votre mode de jeu dans le dossier _"contrib"_ de la branche _master_.
 
 Si vous ne savez pas comment faire, le plus simple est encore de m'envoyer un mail avec les sons en pièce jointe sur memoproutpad@gmail.com, et je m'occuperai du reste.
