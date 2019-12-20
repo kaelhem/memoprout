@@ -34,7 +34,7 @@ Il y plusieurs étapes à effectuer avec Audacity afin d'encoder chaque son dans
 
 ## Créer un nouveau mode de jeu
 
-Il existe 2 styles de jeux différents : _prose_ où les sons joués forment des phrases, et _simple_ où les sons joués s'enchainent sans ordre particulier.
+Il existe 2 styles de jeux différents : _"prose"_ où les sons joués forment des phrases, et _"simple"_ où les sons joués s'enchainent sans ordre particulier.
 
 #### Style _prose_
 
@@ -62,19 +62,19 @@ Pour créér un mode de jeu basé sur des sons simples, il faut préparer un dos
 
 Afin que votre nouveau mode de jeu puisse fonctionner sur votre MemoProut Pad, il faut :
 
-+ copier le dossier précedemment créé sur la racine de la carte SD.
++ copier le dossier précedemment créé à la racine de la carte SD.
 
-+ dans le dossier _GAMES_ de la carte SD, dupliquer le fichier BASIC.PRT (pour le style _prose_) ou MUSIC.PRT (pour le style _simple_), et le renommer comme le dossier précédemment créé en conservant l'extension _.PRT_. Par exemple si votre dossier se nomme _MACHIN_, ce fichier devra être nommé _MACHIN.PRT_.
++ dans le dossier _GAMES_ de la carte SD, dupliquer le fichier BASIC.PRT (pour le style _"prose"_) ou MUSIC.PRT (pour le style _"simple"_), et le renommer comme le dossier précédemment créé en conservant l'extension _.PRT_. Par exemple si votre dossier se nomme _"MACHIN"_, ce fichier devra être nommé _"MACHIN.PRT"_.
 
-+ à l'aide d'un éditeur de texte, ouvrir le fichier GAMES.PRT se trouvant à la racine de la carte SD et ajouter une ligne contenant le nom de dossier, un espace et un 1 (pour le style _prose_) ou un 2 (pour le style _simple_).
++ à l'aide d'un éditeur de texte, ouvrir le fichier GAMES.PRT se trouvant à la racine de la carte SD et ajouter une ligne contenant le nom de dossier, un espace et un 1 (pour le style _"prose"_) ou un 2 (pour le style _"simple"_).
 
-  >  Par exemple, pour un style de jeu _prose_ et un dossier nommé _MACHIN_, ajouter cette ligne :
+  >  Par exemple, pour un style de jeu _"prose"_ et un dossier nommé _"MACHIN"_, ajouter cette ligne :
 
   ```
   MACHIN 1
   ```
 
-  >  Pour un style de jeu _simple_ et un dossier nommé _MACHIN_, ajouter cette ligne :
+  >  Pour un style de jeu _"simple"_ et un dossier nommé _"MACHIN"_, ajouter cette ligne :
 
   ```
   MACHIN 2
